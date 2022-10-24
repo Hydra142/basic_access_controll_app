@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "SafeMessenge (Package)": {
+      "commandName": "MsixPackage",
+      "nativeDebugging": false
+    },
+    "SafeMessenge (Unpackaged)": {
+      "commandName": "Project",
+      "nativeDebugging": false
+    }
+  }
+}
