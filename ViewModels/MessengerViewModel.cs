@@ -195,7 +195,7 @@ namespace SafeMessenge.ViewModels
                 //});
             }
         }
-        //jobreques
+
         public async Task<List<Message>> GetNewMessages()
         {
             var newMessages = new List<Message>();
@@ -203,7 +203,6 @@ namespace SafeMessenge.ViewModels
             while (true)
             {
                 await Task.Delay(1000);
-                var a = 8;
                 if (CurrentChatData != null)
                 {
                     try

@@ -28,7 +28,8 @@ public class AppDataService
 
     public List<Chat> SetUserChatsFromApi(long userId)
     {
-        Chats = ApiService.ReadAll<Chat>($"chats?users_id_array={userId}").ToList();
+        var chats = ApiService.ReadAll<Chat>($"chats?users_id_array={userId}").ToList();
+        Chats = chats.Where(chat => chat.UsersIds.Contains(userId)).ToList();
         return Chats;
     }
 }
