@@ -70,6 +70,6 @@
                 <TextBlock Text="{x:Bind ViewModel.CyrrentUser.Name, Mode=OneWay}"/>
             </StackPanel>
         </Grid>
-        <Button Grid.Row="4" Content="Увійти" Click="Login" HorizontalAlignment="Center" Background="red"/>
+        <Button Grid.Row="4" Content="Увійти" Click="Login" HorizontalAlignment="Center" Background="red" IsEnabled="{x:Bind ViewModel.IsUserSelected, Mode=OneWay}"/>
     </Grid>
 </Page>

@@ -35,6 +35,9 @@ public sealed partial class LoginPage : Page
 
     private void Login(object sender, RoutedEventArgs e)
     {
-        ViewModel.NavigationService.NavigateToMessengerPage();
+        if (ViewModel.CyrrentUser != null)
+        {
+            ViewModel.NavigationService.NavigateToMessengerPage();
+        }
     }
 }

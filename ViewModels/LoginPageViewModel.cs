@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using Newtonsoft.Json.Linq;
 using SafeMessenge.Models;
 using SafeMessenge.Services;
 using System;
@@ -15,12 +16,19 @@ public class LoginPageViewModel : ObservableRecipient
     public AppDataService AppDataService { get; set; }
     private User? _CyrrentUser;
     private List<User> _users;
+    private bool _IsUserSelected = false;
+    public bool IsUserSelected
+    {
+        get => _IsUserSelected;
+        set => SetProperty(ref _IsUserSelected, value);
+    }
 
     public User? CyrrentUser
     {
         get => _CyrrentUser;
         set
         {
+            IsUserSelected = value != null;
             AppDataService.CurrentUser = value;
             SetProperty(ref _CyrrentUser, value);
         }
@@ -42,6 +50,7 @@ public class LoginPageViewModel : ObservableRecipient
         if (oldUser != null)
         {
             oldUser = Users.Find(user => user.Id == oldUser.Id);
+            IsUserSelected = oldUser != null;
             _CyrrentUser = oldUser;
         }
     }

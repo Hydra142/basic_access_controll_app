@@ -22,7 +22,7 @@ public partial class Chat : ObservableRecipient, IResponseModel
     public User Partner = new();
     public long PartnerId = new();
     [ObservableProperty]
-    public string _EncriptingTextKey = "DEDAULT_ENCRIPTION_KEY_PHRASE";
+    public string _EncriptingTextKey = "";
     [ObservableProperty]
     public int newMessagesCount = 0;  
     [ObservableProperty]
