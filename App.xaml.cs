@@ -16,7 +16,6 @@ public sealed partial class App : Application
         InitializeComponent();
         Ioc.Default.ConfigureServices(new ServiceCollection()
             .AddSingleton<NavigationService>()
-            .AddSingleton<ApiService>()
             .AddSingleton<AppDataService>()
 
             .AddTransient<ShellPageViewModel>()

@@ -9,27 +9,17 @@ namespace SafeMessenge.Services;
 
 public class AppDataService
 {
-    public ApiService ApiService;
     public List<User> Users { get; set; } = new();
     public User? CurrentUser { get; set; }
-    public List<Chat> Chats { get; set; } = new();
 
-    public AppDataService(ApiService apiService)
+    public AppDataService()
     {
-        ApiService = apiService;
 
     }
 
     public List<User> SetUsersFromApi()
     {
-        Users = ApiService.ReadAll<User>("users").ToList();
+        Users = new List<User>() { new User() { Name = "ddd", Id = 1 }, new User() { Name = "kkk", Id = 2 }, new User() { Name = "lll", Id = 3 } };
         return Users;
-    }
-
-    public List<Chat> SetUserChatsFromApi(long userId)
-    {
-        var chats = ApiService.ReadAll<Chat>($"chats?users_id_array={userId}").ToList();
-        Chats = chats.Where(chat => chat.UsersIds.Contains(userId)).ToList();
-        return Chats;
     }
 }
