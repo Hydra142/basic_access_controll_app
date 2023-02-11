@@ -12,6 +12,7 @@ namespace SafeMessenge.Services;
 public class AppDataService
 {
     public List<User> Users { get; set; } = new();
+    public List<PasswordType> PasswordTypes { get; set; } = new();
     public User? CurrentUser { get; set; }
 
     private ISqliteConnector _sqliteConnector;
@@ -19,6 +20,7 @@ public class AppDataService
     public AppDataService(ISqliteConnector conn)
     {
         _sqliteConnector = conn;
+        //_ = SetPasswordTypes();
     }
 
     public async Task<List<User>> SetUsers()
@@ -44,5 +46,10 @@ public class AppDataService
         }
         return null;
 
+    }
+
+    public async Task SetPasswordTypes()
+    {
+        PasswordTypes = (await _sqliteConnector.Read<PasswordType>(Resources.GetPasswordTypes, new { })).ToList();
     }
 }

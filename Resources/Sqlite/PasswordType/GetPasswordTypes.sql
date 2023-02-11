@@ -1,0 +1,1 @@
+﻿SELECT Id, Name, ValidationRegex, Description FROM PaswordTypes

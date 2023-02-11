@@ -39,5 +39,10 @@ namespace SafeMessenge.Views
         {
             ViewModel.NavigationService.NavigateToLoginPage();
         }
+
+        private async void CreateUser(object sender, RoutedEventArgs e)
+        {
+            await CreateUserDialog2.ShowAsync();
+        }
     }
 }

@@ -66,6 +66,7 @@ namespace SafeMessenge.Properties {
         ///    Users.UserName AS [Name],
         ///    Users.Password AS [Password],
         ///    Users.IsAdmin AS [IsAdmin],
+        ///    PaswordTypes.Id AS [PasswordTypeId],
         ///    PaswordTypes.Name AS [PasswordTypeName],
         ///    PaswordTypes.ValidationRegex AS [PasswordValidationRegex],
         ///    PaswordTypes.Description AS [PasswordTypeDescription]
@@ -79,11 +80,21 @@ namespace SafeMessenge.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to SELECT Id, Name, ValidationRegex, Description FROM PaswordTypes.
+        /// </summary>
+        internal static string GetPasswordTypes {
+            get {
+                return ResourceManager.GetString("GetPasswordTypes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to SELECT
         ///    Users.Id AS [Id],
         ///    Users.UserName AS [Name],
         ///    Users.Password AS [Password],
         ///    Users.IsAdmin AS [IsAdmin],
+        ///    PaswordTypes.Id AS [PasswordTypeId],
         ///    PaswordTypes.Name AS [PasswordTypeName],
         ///    PaswordTypes.ValidationRegex AS [PasswordValidationRegex],
         ///    PaswordTypes.Description AS [PasswordTypeDescription]
@@ -107,8 +118,8 @@ namespace SafeMessenge.Properties {
         ///, [Created] DATETIME default current_timestamp
         ///);
         ///INSERT OR IGNORE INTO PaswordTypes ([Name], [ValidationRegex], [Description]) VALUES
-        ///(&apos;Simple&apos;, &apos;&apos;, &apos;Будь-який пароль&apos;),
-        ///(&apos;Complex&apos;, &apos;^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$&apos;, &apos;Пароль має містити мінімум 8 символів, містити сиво [rest of string was truncated]&quot;;.
+        ///(&apos;Простий&apos;, &apos;.&apos;, &apos;Пароль повивнен містити мінімум один символ&apos;),
+        ///(&apos;Складний&apos;, &apos;^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$&apos;, &apos;Пароль має містити мі [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string InsertTables {
             get {

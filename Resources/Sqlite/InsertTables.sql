@@ -7,8 +7,8 @@ CREATE TABLE IF NOT EXISTS [PaswordTypes] (
 , [Created] DATETIME default current_timestamp
 );
 INSERT OR IGNORE INTO PaswordTypes ([Name], [ValidationRegex], [Description]) VALUES
-('Simple', '.', 'Пароль повивнен містити мінімум один символ'),
-('Complex', '^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$', 'Пароль має містити мінімум 8 символів, містити сиволи різного регістру та цифри');
+('Простий', '.', 'Пароль повивнен містити мінімум один символ'),
+('Складний', '^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$', 'Пароль має містити мінімум 8 символів, містити сиволи різного регістру та цифри');
 
 DROP TABLE IF EXISTS [Users];
 CREATE TABLE IF NOT EXISTS [Users] (

@@ -1,0 +1,60 @@
+﻿<UserControl
+    x:Class="SafeMessenge.UserControls.CustomComboBox"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid x:Name="Grid" 
+        CornerRadius="2" 
+        BorderBrush="#C4C4C4"
+        BorderThickness="1, 1, 1, 1">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="30" />
+        </Grid.ColumnDefinitions>
+        <ComboBox
+                Grid.Column="0"
+                x:Name="ComboBox"
+                ItemsSource="{x:Bind ItemsSource, Mode=OneWay}"
+                SelectionChanged="ComboBox_SelectionChanged"
+                DisplayMemberPath="{x:Bind DisplayMemberPath, Mode=OneWay}"
+                SelectedItem="{x:Bind SelectedItem, Mode=TwoWay}"
+                LostFocus="ComboBox_LostFocus">
+            <ComboBox.Resources>
+                <SolidColorBrush x:Key="ComboBoxDropDownGlyphForeground" Color="#00FFFFFF"/>
+                <SolidColorBrush x:Key="ComboBoxDropDownGlyphForegroundDisabled" Color="#00FFFFFF"/>
+                <SolidColorBrush x:Key="ComboBoxDropDownGlyphForegroundFocused" Color="#00FFFFFF"/>
+                <SolidColorBrush x:Key="ComboBoxDropDownGlyphForegroundFocusedPressed" Color="#00FFFFFF"/>
+                <Style TargetType="ComboBox">
+                    <Setter Property="CornerRadius" Value="0"/>
+                    <Setter Property="BorderBrush" Value="#C4C4C4"/>
+                    <Setter Property="BorderThickness" Value="0, 0, 0, 0"/>
+                    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                </Style>
+            </ComboBox.Resources>
+        </ComboBox>
+        <Button 
+                x:Name="Button"
+                Grid.Column="1"
+                FontSize="16" 
+                FontWeight="Bold" 
+                Height="33"
+                Padding="7, 0, 7, 7"
+                BorderThickness="1 0 0 0"
+                Foreground="Black"
+                Background="#f9f9f9"
+                Click="Expand_ComboBox">
+            <Button.Resources>
+                <SolidColorBrush x:Key="ButtonForegroundPointerOver" Color="Black"/>
+                <SolidColorBrush x:Key="ButtonForegroundPressed" Color="Black"/>
+            </Button.Resources>
+            <TextBlock
+                Text="&#8897;"
+                Margin="0 3 0 0"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"/>
+        </Button>
+    </Grid>
+</UserControl>

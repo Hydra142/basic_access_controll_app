@@ -29,6 +29,7 @@
 
   <ItemGroup>
     <None Remove="UserControls\CreateChatDialog.xaml" />
+    <None Remove="UserControls\CreateUserDialog.xaml" />
     <None Remove="Views\LoginPage.xaml" />
     <None Remove="Views\MessengerPage.xaml" />
     <None Remove="Views\ShellPage.xaml" />
@@ -139,6 +140,9 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>GetAllUsers.Designer.cs</LastGenOutput>
     </None>
+    <Page Update="UserControls\CreateUserDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <Target Name="PostPublish" AfterTargets="Publish">
     <GetAssemblyIdentity AssemblyFiles="$(TargetPath)">
