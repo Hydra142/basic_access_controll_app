@@ -128,6 +128,16 @@ namespace SafeMessenge.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to INSERT INTO Users ([UserName], [Password], [PasswordTypeId], [IsAdmin]) VALUES
+        ///(@Name, &apos;&apos;, @PasswordTypeId, @IsAdmin).
+        /// </summary>
+        internal static string InsertUser {
+            get {
+                return ResourceManager.GetString("InsertUser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to UPDATE [Users] SET
         ///[Password] = @Password,
         ///[IsAdmin] = @IsAdmin,

@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="using:SafeMessenge.Models"
+    xmlns:usercontrols="using:SafeMessenge.UserControls"
     mc:Ignorable="d">
     <UserControl.Resources>
         <SolidColorBrush x:Key="ContentDialogForeground" Color="Black"/>
@@ -52,13 +53,18 @@
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
                     <TextBlock Grid.Row="0" Grid.Column="0" Text="Імя:" VerticalAlignment="Center" FontSize="15" FontWeight="Normal"/>
-                    <TextBox Grid.Row="0" Grid.Column="1" Width="200"/>
+                    <TextBox Grid.Row="0" Grid.Column="1" Width="200" Text="{x:Bind UserName, Mode=TwoWay}"/>
                     <TextBlock Grid.Row="1" Grid.Column="0" Text="Тип паролю:" VerticalAlignment="Center" FontSize="15" FontWeight="Normal"/>
-                    <!--<usercontrols:CustomComboBox ItemsSource="{x:Bind PasswordTypeOptions}" SelectedItem="{x:Bind SelectedPasswordTypeOption}"/>-->
+                    <usercontrols:CustomComboBox
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        DisplayMemberPath="Value"
+                        ItemsSource="{x:Bind PasswordTypeOptions}"
+                        SelectedItem="{x:Bind SelectedPasswordTypeOption, Mode=TwoWay}"/>
                 </Grid>
                 <StackPanel Orientation="Horizontal" Grid.Row="3" HorizontalAlignment="Center">
                     <Button Content="Скасувати" Click="Cancel" HorizontalAlignment="Left" x:Name="CancelButton" Margin="0 0 10 0"/>
-                    <Button Content="Створити чат" Click="CloseDialog" HorizontalAlignment="Right" x:Name="CreateUserButton" Visibility="Visible"/>
+                    <Button Content="Створити чат" Click="CreateUser" HorizontalAlignment="Right" x:Name="CreateUserButton" Visibility="Visible"/>
                 </StackPanel>
             </Grid>
         </ContentDialog>

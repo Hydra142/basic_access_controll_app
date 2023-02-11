@@ -20,7 +20,7 @@ public class AppDataService
     public AppDataService(ISqliteConnector conn)
     {
         _sqliteConnector = conn;
-        //_ = SetPasswordTypes();
+        _ = SetPasswordTypes();
     }
 
     public async Task<List<User>> SetUsers()
@@ -51,5 +51,16 @@ public class AppDataService
     public async Task SetPasswordTypes()
     {
         PasswordTypes = (await _sqliteConnector.Read<PasswordType>(Resources.GetPasswordTypes, new { })).ToList();
+    }
+
+    public async Task<User?> CreateUser(User user)
+    {
+        var insert = await _sqliteConnector.Read<User>(Resources.InsertUser, user.ToObject());
+        if (insert != null && insert.Count > 0)
+        {
+            Users.Add(insert.First());
+            return insert.First();
+        }
+        return null;
     }
 }
