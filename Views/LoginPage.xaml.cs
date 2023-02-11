@@ -1,20 +1,10 @@
-﻿using Microsoft.UI.Xaml;
+﻿using Microsoft.IdentityModel.Tokens;
+using Microsoft.UI;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
-using SafeMessenge.Models;
 using SafeMessenge.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-
+using System.Text.RegularExpressions;
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
@@ -33,11 +23,32 @@ public sealed partial class LoginPage : Page
         ViewModel = App.GetService<LoginPageViewModel>();
     }
 
-    private void Login(object sender, RoutedEventArgs e)
+    private async void Login(object sender, RoutedEventArgs e)
     {
-        if (ViewModel.CyrrentUser != null)
+        if (ViewModel.CyrrentUser != null && !ViewModel.CyrrentUser.Password.IsNullOrEmpty())
         {
-            ViewModel.NavigationService.NavigateToMessengerPage();
+            var isPasswordMaches = ViewModel.CyrrentUser.Password == ViewModel.Password;
+            if (isPasswordMaches)
+            {
+                ViewModel.NavigationService.NavigateToMessengerPage();
+            } else
+            {
+                PasswordInput.BorderBrush = new SolidColorBrush(Colors.Red);
+                LoginErrorMessageBlock.Text = "Невіриний пароль!";
+            }
+        } else if (ViewModel.CyrrentUser != null)
+        {
+            var isPasswordValid = Regex.IsMatch(ViewModel.Password, ViewModel.CyrrentUser.PasswordValidationRegex);
+            if (isPasswordValid)
+            {
+                ViewModel.CyrrentUser.Password = ViewModel.Password;
+                await ViewModel.UpdateUser(ViewModel.CyrrentUser);
+                ViewModel.NavigationService.NavigateToMessengerPage();
+            } else
+            {
+                PasswordInput.BorderBrush = new SolidColorBrush(Colors.Red);
+                LoginErrorMessageBlock.Text = ViewModel.CyrrentUser.PasswordTypeDescription;
+            }
         }
     }
 }

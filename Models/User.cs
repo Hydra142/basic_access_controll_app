@@ -1,15 +1,23 @@
 ﻿using Newtonsoft.Json;
-
+using Microsoft.IdentityModel.Tokens;
+using System.Text.RegularExpressions;
 namespace SafeMessenge.Models;
 
 [JsonObject]
 public class User
 {
-    [JsonProperty("id")]
     public long Id;
-    [JsonProperty("name")]
     public string Name;
-    [JsonProperty("password")]
     public string Password;
-    public string Avatar => $"https://dummyimage.com/400x400/000000/0011ff&text=user{Id}";
+    public bool IsAdmin;
+    public long PasswordTypeId;
+    public string PasswordTypeName;
+    public string PasswordValidationRegex;
+    public string PasswordTypeDescription;
+    public string Avatar => $"https://dummyimage.com/400x400/000000/0011ff&text={(Password.IsNullOrEmpty() ? "Новий" : Name)}";
+
+    public object ToObject()
+    {
+        return new { Id = Id, Name = Name, Password = Password, IsAdmin = IsAdmin, PasswordTypeId = PasswordTypeId };
+    }
 }

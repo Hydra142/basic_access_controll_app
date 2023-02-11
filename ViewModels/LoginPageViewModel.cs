@@ -14,8 +14,9 @@ public class LoginPageViewModel : ObservableRecipient
 {
     public NavigationService NavigationService { get; set; }
     public AppDataService AppDataService { get; set; }
-    private User? _CyrrentUser;
-    private List<User> _users;
+    private User? _cyrrentUser;
+    private List<User> _users = new();
+    private string? _password;
     private bool _IsUserSelected = false;
     public bool IsUserSelected
     {
@@ -25,12 +26,12 @@ public class LoginPageViewModel : ObservableRecipient
 
     public User? CyrrentUser
     {
-        get => _CyrrentUser;
+        get => _cyrrentUser;
         set
         {
             IsUserSelected = value != null;
             AppDataService.CurrentUser = value;
-            SetProperty(ref _CyrrentUser, value);
+            SetProperty(ref _cyrrentUser, value);
         }
     }
     public List<User> Users 
@@ -39,19 +40,38 @@ public class LoginPageViewModel : ObservableRecipient
         set => SetProperty(ref _users, value);
     }
 
+    public string? Password 
+    {
+        get => _password;
+        set => SetProperty(ref _password, value);
+    }
+
 
     public LoginPageViewModel(NavigationService navigationService, AppDataService appDataService)
     {
         NavigationService = navigationService;
         AppDataService = appDataService;
-        AppDataService.SetUsersFromApi();
-        _users = AppDataService.Users;
+    }
+
+    public async Task PageLoaded()
+    {
+        await AppDataService.SetUsers();
+        Users = AppDataService.Users;
         var oldUser = AppDataService.CurrentUser;
         if (oldUser != null)
         {
             oldUser = Users.Find(user => user.Id == oldUser.Id);
             IsUserSelected = oldUser != null;
-            _CyrrentUser = oldUser;
+            CyrrentUser = oldUser;
+        }
+    }
+
+    public async Task UpdateUser(User user)
+    {
+        var insertresult = await AppDataService.UpdateUserData(user);
+        if (insertresult != null)
+        {
+            AppDataService.Users[AppDataService.Users.IndexOf(user)] = insertresult;
         }
     }
 }

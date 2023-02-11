@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:models="using:SafeMessenge.Models"
     mc:Ignorable="d"
+    Loaded="{x:Bind ViewModel.PageLoaded}"
     >
     <Page.Resources>
         <Style TargetType="TextBlock">
@@ -24,7 +25,6 @@
                         <Run Text="{x:Bind Name}"/>
                     </Paragraph>
                 </RichTextBlock>
-                <!--<TextBlock  Grid.Row="1" Text="{x:Bind Name}" HorizontalAlignment="Center"/>-->
                 <Ellipse Grid.Row="1" Height="100" Width="100">
                     <Ellipse.Fill>
                         <ImageBrush ImageSource="{Binding Avatar}"/>
@@ -38,6 +38,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
@@ -60,16 +61,21 @@
                 </ItemsPanelTemplate>
             </GridView.ItemsPanel>
         </GridView>
-        <Grid Grid.Row="3" HorizontalAlignment="Center" RowSpacing="15">
+        <Grid Grid.Row="3" HorizontalAlignment="Center" RowSpacing="15" Width="300">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
-                <TextBlock Text="Корстувач:" VerticalAlignment="Center" Margin="0 0 10 0"/>
-                <TextBlock Text="{x:Bind ViewModel.CyrrentUser.Name, Mode=OneWay}"/>
-            </StackPanel>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="Корстувач:" VerticalAlignment="Center" Margin="0 0 10 0"/>
+            <TextBlock Grid.Row="0" Grid.Column="1" Text="{x:Bind ViewModel.CyrrentUser.Name, Mode=OneWay}"/>
+            <TextBlock Grid.Row="1" Grid.Column="0" Text="Пароль:" VerticalAlignment="Center" Margin="0 0 10 0"/>
+            <TextBox Name="PasswordInput"  Grid.Row="1" Grid.Column="1" Text="{x:Bind ViewModel.Password, Mode=TwoWay}"/>
         </Grid>
-        <Button Grid.Row="4" Content="Увійти" Click="Login" HorizontalAlignment="Center" Background="red" IsEnabled="{x:Bind ViewModel.IsUserSelected, Mode=OneWay}"/>
+        <TextBlock Name="LoginErrorMessageBlock" Grid.Row="4" Grid.Column="0" Text="" HorizontalAlignment="Center" Foreground="red" Margin="0 0 10 0"/>
+        <Button Grid.Row="5" Content="Увійти" Click="Login" HorizontalAlignment="Center" Background="red" IsEnabled="{x:Bind ViewModel.IsUserSelected, Mode=OneWay}"/>
     </Grid>
 </Page>

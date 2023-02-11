@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
+using SafeMessenge.Contracts.Services;
 using SafeMessenge.Services;
 using SafeMessenge.ViewModels;
 using SafeMessenge.Views;
@@ -17,6 +18,7 @@ public sealed partial class App : Application
         Ioc.Default.ConfigureServices(new ServiceCollection()
             .AddSingleton<NavigationService>()
             .AddSingleton<AppDataService>()
+            .AddSingleton<ISqliteConnector, SqliteConnectorService>()
 
             .AddTransient<ShellPageViewModel>()
             .AddTransient<LoginPageViewModel>()
