@@ -36,7 +36,7 @@ public class NavigationService
     {
         if (Frame != null)
         {
-            Frame.Navigate(typeof(MessengerPage));
+            Frame.Navigate(typeof(AdminMainPage));
         }
     }
 }

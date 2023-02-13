@@ -26,12 +26,12 @@ namespace SafeMessenge.Views
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class MessengerPage : Page
+    public sealed partial class AdminMainPage : Page
     {
-        public MessengerViewModel ViewModel { get; set; }
-        public MessengerPage()
+        public AdminMainPageViewModel ViewModel { get; set; }
+        public AdminMainPage()
         {
-            ViewModel = App.GetService<MessengerViewModel>();
+            ViewModel = App.GetService<AdminMainPageViewModel>();
             this.InitializeComponent();
         }
 

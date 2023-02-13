@@ -30,8 +30,8 @@
   <ItemGroup>
     <None Remove="UserControls\CreateChatDialog.xaml" />
     <None Remove="UserControls\CreateUserDialog.xaml" />
+    <None Remove="Views\AdminMainPage.xaml" />
     <None Remove="Views\LoginPage.xaml" />
-    <None Remove="Views\MessengerPage.xaml" />
     <None Remove="Views\ShellPage.xaml" />
   </ItemGroup>
 
@@ -101,7 +101,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Page Update="Views\MessengerPage.xaml">
+    <Page Update="Views\AdminMainPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

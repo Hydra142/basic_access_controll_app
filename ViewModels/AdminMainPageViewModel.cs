@@ -17,7 +17,7 @@ using Windows.UI.Core;
 
 namespace SafeMessenge.ViewModels
 {
-    public class MessengerViewModel : ObservableRecipient
+    public class AdminMainPageViewModel : ObservableRecipient
     {
         public NavigationService NavigationService { get; set; }
         public AppDataService AppDataService { get; set; }
@@ -40,7 +40,7 @@ namespace SafeMessenge.ViewModels
 
 
 
-        public MessengerViewModel(NavigationService navigationService, AppDataService appDataService)
+        public AdminMainPageViewModel(NavigationService navigationService, AppDataService appDataService)
         {
             NavigationService = navigationService;
             AppDataService = appDataService;
