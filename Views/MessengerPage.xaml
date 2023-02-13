@@ -37,6 +37,50 @@
             <Setter Property="HorizontalAlignment" Value="Center"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
         </Style>
+        <DataTemplate x:DataType="models:User" x:Key="UserListItemTemplate">
+            <GridViewItem Margin="0 3 0 0" Padding="10" BorderThickness="0 0 0 0">
+                <GridViewItem.Resources>
+                    <Style TargetType="GridViewItem">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="GridViewItem">
+                                    <ListViewItemPresenter
+                                        CornerRadius="10 0 0 10"
+                                        Background="#f57c00"
+                                        PressedBackground="#c66900"
+                                        PointerOverBackground="#c66900"
+                                        SelectedBackground="#ffd149"
+                                        SelectedPointerOverBackground="#ffd149"
+                                        SelectedPressedBackground="#ffd149"/>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </GridViewItem.Resources>
+                <Grid Padding="8" Width="200">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Ellipse Grid.Column="0" Height="40" Width="40" >
+                        <Ellipse.Fill>
+                            <ImageBrush ImageSource="{x:Bind Avatar}"/>
+                        </Ellipse.Fill>
+                    </Ellipse>
+                    <Grid Grid.Column="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <RichTextBlock Grid.Row="0" IsTextSelectionEnabled="False" FontSize="17" VerticalAlignment="Center" Margin="20 0 0 0">
+                            <Paragraph>
+                                <Run Text="{x:Bind Name, Mode=OneWay}"/>
+                            </Paragraph>
+                        </RichTextBlock>
+                    </Grid>
+                </Grid>
+            </GridViewItem>
+        </DataTemplate>
     </Page.Resources>
     <Grid x:Name="MainGrid">
         <Grid.RowDefinitions>
@@ -74,7 +118,31 @@
             </Grid>
         </Grid>
         <Grid Grid.Row="1" Background="#ffd149">
-            
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <GridView
+                x:Name="Users"
+                ItemsSource="{x:Bind ViewModel.Users, Mode=OneWay}"
+                SelectedItem="{x:Bind ViewModel.SelectedUser, Mode=TwoWay}"
+                ItemTemplate="{StaticResource UserListItemTemplate}"
+                Padding="5 0 0 0"
+                Background="#ffa000">
+                <GridView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <ItemsWrapGrid Orientation="Horizontal" MaximumRowsOrColumns="1"/>
+                    </ItemsPanelTemplate>
+                </GridView.ItemsPanel>
+            </GridView>
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Text="{x:Bind ViewModel.SelectedUser.Name, Mode=OneWay}"/>
+                <TextBox Grid.Row="1" Text="{x:Bind ViewModel.SelectedUser.Name, Mode=TwoWay}"/>
+            </Grid>
         </Grid>
     </Grid>
 </Page>

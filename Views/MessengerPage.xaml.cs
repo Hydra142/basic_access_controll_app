@@ -45,7 +45,12 @@ namespace SafeMessenge.Views
             var newUserData = await CreateUserDialog2.ShowAsync(ViewModel.AppDataService.PasswordTypes);
             if (newUserData != null)
             {
-                await ViewModel.AppDataService.CreateUser(newUserData);
+                var newUser = await ViewModel.AppDataService.CreateUser(newUserData);
+                if (newUser != null)
+                {
+                    ViewModel.Users.Insert(0, newUser);
+                    var a = 5;
+                }
             }
         }
     }

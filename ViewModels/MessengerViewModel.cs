@@ -22,19 +22,23 @@ namespace SafeMessenge.ViewModels
         public NavigationService NavigationService { get; set; }
         public AppDataService AppDataService { get; set; }
         private User _CurrentUser = new();
-        private List<User> _Users = new();
+        private User? _selectedUser;
         public User CurrentUser 
         {
             get => _CurrentUser;
             set => SetProperty(ref _CurrentUser, value);
         }
-        public List<User> Users
+        public ObservableCollection<User> Users = new();
+
+        public User? SelectedUser
         {
-            get => _Users;
-            set => SetProperty(ref _Users, value);
+            get => _selectedUser;
+            set => SetProperty(ref _selectedUser, value);
         }
-        
-        
+
+
+
+
 
         public MessengerViewModel(NavigationService navigationService, AppDataService appDataService)
         {
@@ -48,7 +52,7 @@ namespace SafeMessenge.ViewModels
             {
                 NavigationService.NavigateToLoginPage();
             }
-            _Users = AppDataService.Users;
+            AppDataService.Users.ForEach(user => Users.Add(user));
         }
     }
 }
