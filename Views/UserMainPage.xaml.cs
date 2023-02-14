@@ -31,4 +31,13 @@ public sealed partial class UserMainPage : Page
     {
         ViewModel.NavigationService.NavigateToLoginPage();
     }
+
+    private async void OpenEditUserDialog(object sender, RoutedEventArgs e)
+    {
+        var user = await EditUserDialog.ShowAsync(ViewModel.CurrentUser);
+        if (user != null)
+        {
+           ViewModel.CurrentUser = await ViewModel.AppDataService.UpdateUserData(user);
+        }
+    }
 }

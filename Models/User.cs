@@ -18,6 +18,6 @@ public class User
 
     public object ToObject()
     {
-        return new { Id = Id, Name = Name, Password = Password, IsAdmin = IsAdmin, PasswordTypeId = PasswordTypeId };
+        return new { Id = Id, UserName = Name, Password = Password, IsAdmin = IsAdmin, PasswordTypeId = PasswordTypeId };
     }
 }

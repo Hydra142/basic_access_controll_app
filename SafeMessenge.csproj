@@ -26,10 +26,15 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+  
+  <ItemGroup>
+    <Content Remove="Assets\edit.png" />
+  </ItemGroup>
 
   <ItemGroup>
     <None Remove="UserControls\CreateChatDialog.xaml" />
     <None Remove="UserControls\CreateUserDialog.xaml" />
+    <None Remove="UserControls\EditUserDialog.xaml" />
     <None Remove="Views\AdminMainPage.xaml" />
     <None Remove="Views\LoginPage.xaml" />
     <None Remove="Views\ShellPage.xaml" />
@@ -141,6 +146,9 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>GetAllUsers.Designer.cs</LastGenOutput>
     </None>
+    <Page Update="UserControls\EditUserDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="Views\UserMainPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

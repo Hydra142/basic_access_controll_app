@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
+    xmlns:usercontrols="using:SafeMessenge.UserControls"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid x:Name="MainGrid">
@@ -13,6 +14,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
+        <usercontrols:EditUserDialog x:Name="EditUserDialog"/>
         <Grid Grid.Row="0" Background="#c56000" Padding="8">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
@@ -23,6 +25,7 @@
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <Ellipse Grid.Column="0" Height="40" Width="40" Stroke="White" StrokeThickness="2">
                     <Ellipse.Fill>
@@ -30,7 +33,10 @@
                     </Ellipse.Fill>
                 </Ellipse>
                 <TextBlock Grid.Column="1" Text="{x:Bind ViewModel.CurrentUser.Name, Mode=OneWay}" VerticalAlignment="Center"/>
-                <Button Grid.Column="2" Padding="0" CornerRadius="0" Click="BackToLogin">
+                <Button Grid.Column="2" Padding="0" CornerRadius="0" Click="OpenEditUserDialog">
+                    <Image Source="/Assets/edit.png" Height="25" VerticalAlignment="Center"/>
+                </Button>
+                <Button Grid.Column="3" Padding="0" CornerRadius="0" Click="BackToLogin">
                     <Image Source="/Assets/logout.png" Height="25" VerticalAlignment="Center"/>
                 </Button>
             </Grid>
