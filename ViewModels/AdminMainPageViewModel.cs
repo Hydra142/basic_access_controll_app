@@ -21,6 +21,20 @@ namespace SafeMessenge.ViewModels
     {
         public NavigationService NavigationService { get; set; }
         public AppDataService AppDataService { get; set; }
+        public List<ComboBoxOptionHelper.ComboBoxOption> PasswordTypeOptions { get; set; } = new();
+        private ComboBoxOptionHelper.ComboBoxOption? _selectedPasswordTypeOption;
+        public ComboBoxOptionHelper.ComboBoxOption? SelectedPasswordTypeOption
+        {
+            get => _selectedPasswordTypeOption;
+            set
+            {
+                if (value != null && SelectedUser != null)
+                {
+                    SelectedUser.PasswordTypeId = int.Parse(value.Key);
+                }
+                SetProperty(ref _selectedPasswordTypeOption, value);
+            }
+        }
         private User _CurrentUser = new();
         private User? _selectedUser;
         public User CurrentUser 
@@ -33,7 +47,15 @@ namespace SafeMessenge.ViewModels
         public User? SelectedUser
         {
             get => _selectedUser;
-            set => SetProperty(ref _selectedUser, value);
+            set
+            {
+                if (value != null)
+                {
+                    SelectedPasswordTypeOption = ComboBoxOptionHelper.GetOptionByKey(value.PasswordTypeId.ToString(), PasswordTypeOptions);
+                    var a = 5;
+                }
+                SetProperty(ref _selectedUser, value);
+            }
         }
 
 
@@ -52,7 +74,19 @@ namespace SafeMessenge.ViewModels
             {
                 NavigationService.NavigateToLoginPage();
             }
+            foreach (var passwordType in appDataService.PasswordTypes)
+            {
+                PasswordTypeOptions.Add(new(passwordType.Id.ToString(), passwordType.Name));
+            }
             AppDataService.Users.ForEach(user => Users.Add(user));
+        }
+
+        public async void SaveUserData()
+        {
+            if (SelectedUser != null)
+            {
+                SelectedUser = await AppDataService.UpdateUserData(SelectedUser);
+            }
         }
     }
 }

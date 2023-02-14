@@ -140,8 +140,30 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
-                <TextBlock Grid.Row="0" Text="{x:Bind ViewModel.SelectedUser.Name, Mode=OneWay}"/>
-                <TextBox Grid.Row="1" Text="{x:Bind ViewModel.SelectedUser.Name, Mode=TwoWay}"/>
+                <Grid Width="400" HorizontalAlignment="Left" Padding="10" RowSpacing="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Імя:" VerticalAlignment="Center" FontSize="18" FontWeight="Normal" Foreground="Black"/>
+                    <TextBox Grid.Row="0" Grid.Column="1" Text="{x:Bind ViewModel.SelectedUser.Name, Mode=TwoWay}"/>
+                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Пароль:" VerticalAlignment="Center" FontSize="18" FontWeight="Normal" Foreground="Black"/>
+                    <TextBox Grid.Row="1" Grid.Column="1" Text="{x:Bind ViewModel.SelectedUser.Password, Mode=TwoWay}"/>
+                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Тип паролю:" VerticalAlignment="Center" FontSize="18" FontWeight="Normal" Foreground="Black"/>
+                    <usercontrols:CustomComboBox
+                        Grid.Row="2"
+                        Grid.Column="1"
+                        DisplayMemberPath="Value"
+                        ItemsSource="{x:Bind ViewModel.PasswordTypeOptions, Mode=OneWay}"
+                        SelectedItem="{x:Bind ViewModel.SelectedPasswordTypeOption, Mode=TwoWay}"/>
+                    <Button Grid.Row="3" Grid.Column="1" Content="Зберегти" HorizontalAlignment="Right" Background="red" Click="{x:Bind ViewModel.SaveUserData}"/>
+                </Grid>
             </Grid>
         </Grid>
     </Grid>

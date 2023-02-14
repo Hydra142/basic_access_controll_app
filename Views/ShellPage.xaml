@@ -19,7 +19,7 @@
             Background="{ThemeResource AppBarBackgroundThemeBrush}"
             Orientation="Horizontal">
             <Image Source="Assets\Logo.gif"/>
-            <TextBlock Margin="10,0,0,0" VerticalAlignment="Center" Text="Safe Messenger"/>
+            <TextBlock Margin="10,0,0,0" VerticalAlignment="Center" Text="ТБД_Редчич"/>
         </StackPanel>
         <Frame Grid.Row="1" x:Name="RootFrame"/>
     </Grid>

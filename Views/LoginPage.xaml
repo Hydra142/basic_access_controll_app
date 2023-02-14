@@ -37,16 +37,33 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <TextBlock Grid.Row="0" Text="Вхід в систему" HorizontalTextAlignment="Center" FontSize="22" FontWeight="Bold"/>
-        <TextBlock Grid.Row="1" Text="Виберіть користувача" HorizontalTextAlignment="Center"/>
+        <Button Content="Про автора" Grid.Row="0" HorizontalAlignment="Right">
+            <Button.Flyout>
+                <Flyout>
+                    <StackPanel>
+                        <RichTextBlock>
+                            <Paragraph>
+                                <Run Text="БІ-442"/>
+                            </Paragraph>
+                            <Paragraph>
+                                <Run Text="Редчич Михайло"/>
+                            </Paragraph>
+                        </RichTextBlock>
+                    </StackPanel>
+                </Flyout>
+            </Button.Flyout>
+        </Button>
+        <TextBlock Grid.Row="1" Text="Вхід в систему" HorizontalTextAlignment="Center" FontSize="22" FontWeight="Bold"/>
+        <TextBlock Grid.Row="2" Text="Виберіть користувача" HorizontalTextAlignment="Center"/>
         <GridView
             x:Name="UsersGridView"
-            Grid.Row="2"
+            Grid.Row="3"
             ScrollViewer.VerticalScrollMode="Enabled"
             ScrollViewer.IsVerticalRailEnabled="True"
             ScrollViewer.VerticalScrollBarVisibility="Visible"
@@ -61,7 +78,7 @@
                 </ItemsPanelTemplate>
             </GridView.ItemsPanel>
         </GridView>
-        <Grid Grid.Row="3" HorizontalAlignment="Center" RowSpacing="15" Width="300">
+        <Grid Grid.Row="4" HorizontalAlignment="Center" RowSpacing="15" Width="300">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
@@ -75,7 +92,7 @@
             <TextBlock Grid.Row="1" Grid.Column="0" Text="Пароль:" VerticalAlignment="Center" Margin="0 0 10 0"/>
             <TextBox Name="PasswordInput"  Grid.Row="1" Grid.Column="1" Text="{x:Bind ViewModel.Password, Mode=TwoWay}"/>
         </Grid>
-        <TextBlock Name="LoginErrorMessageBlock" Grid.Row="4" Grid.Column="0" Text="" HorizontalAlignment="Center" Foreground="red" Margin="0 0 10 0"/>
-        <Button Grid.Row="5" Content="Увійти" Click="Login" HorizontalAlignment="Center" Background="red" IsEnabled="{x:Bind ViewModel.IsUserSelected, Mode=OneWay}"/>
+        <TextBlock Name="LoginErrorMessageBlock" Grid.Row="5" Grid.Column="0" Text="" HorizontalAlignment="Center" Foreground="red" Margin="0 0 10 0"/>
+        <Button Grid.Row="6" Content="Увійти" Click="Login" HorizontalAlignment="Center" Background="red" IsEnabled="{x:Bind ViewModel.IsUserSelected, Mode=OneWay}"/>
     </Grid>
 </Page>

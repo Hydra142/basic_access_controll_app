@@ -30,6 +30,7 @@
                 <Style TargetType="ComboBox">
                     <Setter Property="CornerRadius" Value="0"/>
                     <Setter Property="BorderBrush" Value="#C4C4C4"/>
+                    <Setter Property="Foreground" Value="Black"/>
                     <Setter Property="BorderThickness" Value="0, 0, 0, 0"/>
                     <Setter Property="HorizontalAlignment" Value="Stretch"/>
                 </Style>
@@ -44,7 +45,7 @@
                 Padding="7, 0, 7, 7"
                 BorderThickness="1 0 0 0"
                 Foreground="Black"
-                Background="#f9f9f9"
+                Background="Brown"
                 Click="Expand_ComboBox">
             <Button.Resources>
                 <SolidColorBrush x:Key="ButtonForegroundPointerOver" Color="Black"/>
