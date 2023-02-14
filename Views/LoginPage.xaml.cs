@@ -27,6 +27,7 @@ public sealed partial class LoginPage : Page
     {
         if (ViewModel.CyrrentUser != null && !ViewModel.CyrrentUser.Password.IsNullOrEmpty())
         {
+            // перевірка на правильність паролю
             var isPasswordMaches = ViewModel.CyrrentUser.Password == ViewModel.Password;
             if (isPasswordMaches)
             {
@@ -36,8 +37,9 @@ public sealed partial class LoginPage : Page
                 PasswordInput.BorderBrush = new SolidColorBrush(Colors.Red);
                 LoginErrorMessageBlock.Text = "Невіриний пароль!";
             }
-        } else if (ViewModel.CyrrentUser != null)
+        } else if (ViewModel.CyrrentUser != null) // корстувач новий
         {
+            //перевірка відповідності паролю умовам налаштування сладності
             var isPasswordValid = Regex.IsMatch(ViewModel.Password, ViewModel.CyrrentUser.PasswordValidationRegex);
             if (isPasswordValid)
             {

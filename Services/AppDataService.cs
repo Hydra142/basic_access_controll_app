@@ -38,6 +38,7 @@ public class AppDataService
 
     public async Task<User?> UpdateUserData(User user)
     {
+        //запит на зміну данних корстувача
         var res = await _sqliteConnector.Write(Resources.UpdateUser, user.ToObject());
         var userData = await _sqliteConnector.Read<User>(Resources.GetUserById, user.ToObject());
         if (userData != null && userData.Count > 0)
@@ -55,6 +56,7 @@ public class AppDataService
 
     public async Task<User?> CreateUser(User user)
     {
+        //створення новго користувача
         var insert = await _sqliteConnector.Read<User>(Resources.InsertUser, user.ToObject());
         if (insert != null && insert.Count > 0)
         {

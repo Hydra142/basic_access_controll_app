@@ -21,4 +21,4 @@ CREATE TABLE IF NOT EXISTS [Users] (
 , FOREIGN KEY ([PasswordTypeId]) REFERENCES PaswordTypes(Id)
 );
 INSERT INTO Users ([UserName], [Password], [PasswordTypeId], [IsAdmin]) VALUES
-('Redchych', '', 1, 1), ('Ivanov_1', '', 2, 0)
+('Admin', 'q', 1, 1)

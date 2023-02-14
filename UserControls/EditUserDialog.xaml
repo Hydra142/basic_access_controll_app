@@ -50,7 +50,7 @@
                 <TextBlock Grid.Row="2" x:Name="ErrorMessage" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="12" Foreground="Red"/>
                 <StackPanel Orientation="Horizontal" Grid.Row="3" HorizontalAlignment="Center">
                         <Button Content="Скасувати" Click="Cancel" HorizontalAlignment="Left" Margin="0 0 10 0"/>
-                        <Button Content="Створити чат" Click="EditUser" HorizontalAlignment="Right" Visibility="Visible"/>
+                        <Button Content="Зберегти" Click="EditUser" HorizontalAlignment="Right" Visibility="Visible"/>
                     </StackPanel>
                 </Grid>
             </ContentDialog>

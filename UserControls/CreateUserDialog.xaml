@@ -64,7 +64,7 @@
                 </Grid>
                 <StackPanel Orientation="Horizontal" Grid.Row="3" HorizontalAlignment="Center">
                     <Button Content="Скасувати" Click="Cancel" HorizontalAlignment="Left" x:Name="CancelButton" Margin="0 0 10 0"/>
-                    <Button Content="Створити чат" Click="CreateUser" HorizontalAlignment="Right" x:Name="CreateUserButton" Visibility="Visible"/>
+                    <Button Content="Створити користувача" Click="CreateUser" HorizontalAlignment="Right" x:Name="CreateUserButton" Visibility="Visible"/>
                 </StackPanel>
             </Grid>
         </ContentDialog>

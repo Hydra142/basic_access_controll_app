@@ -1,5 +1,5 @@
 ﻿INSERT INTO Users ([UserName], [Password], [PasswordTypeId], [IsAdmin]) VALUES
-(@Name, '', @PasswordTypeId, @IsAdmin);
+(@UserName, '', @PasswordTypeId, @IsAdmin);
 SELECT
     Users.Id AS [Id],
     Users.UserName AS [Name],
