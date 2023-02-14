@@ -32,11 +32,19 @@ public class NavigationService
         }
     }
 
-    public void NavigateToMessengerPage()
+    public void NavigateToAdminMainPage()
     {
         if (Frame != null)
         {
             Frame.Navigate(typeof(AdminMainPage));
+        }
+    }
+
+    public void NavigateToUserMainPage()
+    {
+        if (Frame != null)
+        {
+            Frame.Navigate(typeof(UserMainPage));
         }
     }
 }

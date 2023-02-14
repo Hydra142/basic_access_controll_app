@@ -30,7 +30,7 @@ public sealed partial class LoginPage : Page
             var isPasswordMaches = ViewModel.CyrrentUser.Password == ViewModel.Password;
             if (isPasswordMaches)
             {
-                ViewModel.NavigationService.NavigateToMessengerPage();
+                NavigateToNextPage();
             } else
             {
                 PasswordInput.BorderBrush = new SolidColorBrush(Colors.Red);
@@ -43,12 +43,24 @@ public sealed partial class LoginPage : Page
             {
                 ViewModel.CyrrentUser.Password = ViewModel.Password;
                 await ViewModel.UpdateUser(ViewModel.CyrrentUser);
-                ViewModel.NavigationService.NavigateToMessengerPage();
+                NavigateToNextPage();
             } else
             {
                 PasswordInput.BorderBrush = new SolidColorBrush(Colors.Red);
                 LoginErrorMessageBlock.Text = ViewModel.CyrrentUser.PasswordTypeDescription;
             }
+        }
+    }
+
+    private void NavigateToNextPage()
+    {
+        if (ViewModel.CyrrentUser.IsAdmin)
+        {
+            ViewModel.NavigationService.NavigateToAdminMainPage();
+        }
+        else
+        {
+            ViewModel.NavigationService.NavigateToUserMainPage();
         }
     }
 }

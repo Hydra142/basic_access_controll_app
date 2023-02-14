@@ -23,9 +23,11 @@ public sealed partial class App : Application
             .AddTransient<ShellPageViewModel>()
             .AddTransient<LoginPageViewModel>()
             .AddTransient<AdminMainPageViewModel>()
+            .AddTransient<UserMainPageViewModel>()
             .AddTransient<ShellPage>()
             .AddTransient<LoginPage>()
             .AddTransient<AdminMainPage>()
+            .AddTransient<UserMainPage>()
             .BuildServiceProvider());
     }
 

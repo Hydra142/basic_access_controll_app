@@ -33,6 +33,7 @@
     <None Remove="Views\AdminMainPage.xaml" />
     <None Remove="Views\LoginPage.xaml" />
     <None Remove="Views\ShellPage.xaml" />
+    <None Remove="Views\UserMainPage.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -140,6 +141,9 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>GetAllUsers.Designer.cs</LastGenOutput>
     </None>
+    <Page Update="Views\UserMainPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="UserControls\CreateUserDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
