@@ -66,12 +66,12 @@ public class LoginPageViewModel : ObservableRecipient
         }
     }
 
-    public async Task UpdateUser(User user)
+    public async Task UpdateUserPassword(User user)
     {
-        var insertresult = await AppDataService.UpdateUserData(user);
-        if (insertresult != null)
+        var result = await AppDataService.UpdateUserPassword(user);
+        if (result != null)
         {
-            AppDataService.Users[AppDataService.Users.IndexOf(user)] = insertresult;
+            AppDataService.Users[AppDataService.Users.IndexOf(user)] = result;
         }
     }
 }

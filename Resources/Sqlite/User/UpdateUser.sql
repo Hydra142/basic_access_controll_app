@@ -2,5 +2,6 @@
 [UserName] = @UserName,
 [Password] = @Password,
 [IsAdmin] = @IsAdmin,
-[PasswordTypeId] = @PasswordTypeId
+[PasswordTypeId] = @PasswordTypeId,
+[ClearanceId] = @ClearanceId
 WHERE [Id] = @Id;

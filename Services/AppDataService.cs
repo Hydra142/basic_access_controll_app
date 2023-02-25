@@ -13,6 +13,7 @@ public class AppDataService
 {
     public List<User> Users { get; set; } = new();
     public List<PasswordType> PasswordTypes { get; set; } = new();
+    public List<SecurityClearance> SecurityClearances { get; set; } = new();
     public User? CurrentUser { get; set; }
 
     private ISqliteConnector _sqliteConnector;
@@ -21,6 +22,7 @@ public class AppDataService
     {
         _sqliteConnector = conn;
         _ = SetPasswordTypes();
+        _ = LoadSecurityClearances();
     }
 
     public async Task<List<User>> SetUsers()
@@ -49,9 +51,27 @@ public class AppDataService
 
     }
 
+
+    public async Task<User?> UpdateUserPassword(User user)
+    {
+        //запит на зміну данних корстувача
+        var res = await _sqliteConnector.Write(Resources.UpdateUserPassword, user.ToObject());
+        var userData = await _sqliteConnector.Read<User>(Resources.GetUserById, user.ToObject());
+        if (userData != null && userData.Count > 0)
+        {
+            return userData.First();
+        }
+        return null;
+
+    }
+
     public async Task SetPasswordTypes()
     {
         PasswordTypes = (await _sqliteConnector.Read<PasswordType>(Resources.GetPasswordTypes, new { })).ToList();
+    }
+    public async Task LoadSecurityClearances()
+    {
+        SecurityClearances = (await _sqliteConnector.Read<SecurityClearance>(Resources.GetSecurityClearances, new { })).ToList();
     }
 
     public async Task<User?> CreateUser(User user)
@@ -64,5 +84,15 @@ public class AppDataService
             return insert.First();
         }
         return null;
+    }
+
+    public async Task<List<File>> GetUserFiles(User? user)
+    {
+        List<File> result = new();
+        if (user == null)
+        {
+            return result;
+        }
+        return (await _sqliteConnector.Read<File>(Resources.GetUserFilesByUserId, new { UserId = user.Id })).ToList();
     }
 }

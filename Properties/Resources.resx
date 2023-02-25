@@ -124,8 +124,14 @@
   <data name="GetPasswordTypes" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Sqlite\PasswordType\GetPasswordTypes.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
+  <data name="GetSecurityClearances" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Sqlite\Clearance\GetSecurityClearances.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
+  </data>
   <data name="GetUserById" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Sqlite\User\GetUserById.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="GetUserFilesByUserId" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Sqlite\User\GetUserFilesByUserId.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
   </data>
   <data name="InsertTables" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Sqlite\InsertTables.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
@@ -135,5 +141,8 @@
   </data>
   <data name="UpdateUser" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Sqlite\User\UpdateUser.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="UpdateUserPassword" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Sqlite\User\UpdateUserPassword.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
   </data>
 </root>

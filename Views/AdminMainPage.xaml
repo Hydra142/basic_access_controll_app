@@ -146,6 +146,7 @@
                         <RowDefinition/>
                         <RowDefinition/>
                         <RowDefinition/>
+                        <RowDefinition/>
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
@@ -162,7 +163,14 @@
                         DisplayMemberPath="Value"
                         ItemsSource="{x:Bind ViewModel.PasswordTypeOptions, Mode=OneWay}"
                         SelectedItem="{x:Bind ViewModel.SelectedPasswordTypeOption, Mode=TwoWay}"/>
-                    <Button Grid.Row="3" Grid.Column="1" Content="Зберегти" HorizontalAlignment="Right" Background="red" Click="{x:Bind ViewModel.SaveUserData}"/>
+                    <TextBlock Grid.Row="3" Grid.Column="0" Text="Рівень доступу:" VerticalAlignment="Center" FontSize="18" FontWeight="Normal" Foreground="Black"/>
+                    <usercontrols:CustomComboBox
+                        Grid.Row="3"
+                        Grid.Column="1"
+                        DisplayMemberPath="Value"
+                        ItemsSource="{x:Bind ViewModel.SecurityClearanceOptions, Mode=OneWay}"
+                        SelectedItem="{x:Bind ViewModel.SelectedSecurityClearanceOption, Mode=TwoWay}"/>
+                    <Button Grid.Row="4" Grid.Column="1" Content="Зберегти" HorizontalAlignment="Right" Background="red" Click="{x:Bind ViewModel.SaveUserData}"/>
                 </Grid>
             </Grid>
         </Grid>

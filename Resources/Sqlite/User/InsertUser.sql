@@ -5,6 +5,7 @@ SELECT
     Users.UserName AS [Name],
     Users.Password AS [Password],
     Users.IsAdmin AS [IsAdmin],
+    Users.ClearanceId AS [ClearanceId],
     PaswordTypes.Id AS [PasswordTypeId],
     PaswordTypes.Name AS [PasswordTypeName],
     PaswordTypes.ValidationRegex AS [PasswordValidationRegex],

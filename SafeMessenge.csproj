@@ -122,9 +122,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Releases\x64\" />
-  </ItemGroup>
-  <ItemGroup>
     <Compile Update="Properties\Resources.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -155,6 +152,9 @@
     <Page Update="UserControls\CreateUserDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Releases\" />
   </ItemGroup>
   <Target Name="PostPublish" AfterTargets="Publish">
     <GetAssemblyIdentity AssemblyFiles="$(TargetPath)">

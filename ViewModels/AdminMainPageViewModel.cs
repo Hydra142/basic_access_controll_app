@@ -35,6 +35,20 @@ namespace SafeMessenge.ViewModels
                 SetProperty(ref _selectedPasswordTypeOption, value);
             }
         }
+        public List<ComboBoxOptionHelper.ComboBoxOption> SecurityClearanceOptions { get; set; } = new();
+        private ComboBoxOptionHelper.ComboBoxOption? _selectedSecurityClearanceOption;
+        public ComboBoxOptionHelper.ComboBoxOption? SelectedSecurityClearanceOption
+        {
+            get => _selectedSecurityClearanceOption;
+            set
+            {
+                if (value != null && SelectedUser != null)
+                {
+                    SelectedUser.ClearanceId = int.Parse(value.Key);
+                }
+                SetProperty(ref _selectedSecurityClearanceOption, value);
+            }
+        }
         private User _CurrentUser = new();
         private User? _selectedUser;
         public User CurrentUser 
@@ -49,12 +63,12 @@ namespace SafeMessenge.ViewModels
             get => _selectedUser;
             set
             {
+                SetProperty(ref _selectedUser, value);
                 if (value != null)
                 {
                     SelectedPasswordTypeOption = ComboBoxOptionHelper.GetOptionByKey(value.PasswordTypeId.ToString(), PasswordTypeOptions);
-                    var a = 5;
+                    SelectedSecurityClearanceOption = ComboBoxOptionHelper.GetOptionByKey(value.ClearanceId.ToString(), SecurityClearanceOptions);
                 }
-                SetProperty(ref _selectedUser, value);
             }
         }
 
@@ -78,7 +92,11 @@ namespace SafeMessenge.ViewModels
             {
                 PasswordTypeOptions.Add(new(passwordType.Id.ToString(), passwordType.Name));
             }
-            AppDataService.Users.ForEach(user => Users.Add(user));
+            foreach (var clearance in appDataService.SecurityClearances)
+            {
+                SecurityClearanceOptions.Add(new(clearance.Id.ToString(), clearance.Name));
+            }
+            AppDataService.Users.Where(x => !x.IsAdmin).ToList().ForEach(user => Users.Add(user));
         }
 
         public async void SaveUserData()

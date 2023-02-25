@@ -1,4 +1,5 @@
-﻿using Microsoft.UI.Xaml;
+﻿using Microsoft.UI.Text;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Data;
@@ -6,6 +7,7 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using SafeMessenge.ViewModels;
+using SharpCompress.Common;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -38,6 +40,31 @@ public sealed partial class UserMainPage : Page
         if (user != null)
         {
            ViewModel.CurrentUser = await ViewModel.AppDataService.UpdateUserData(user);
+        }
+    }
+
+    private async void UserFilesList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (ViewModel.SelectedFile != null)
+        {
+            var filePath = ViewModel.SelectedFile.FilePath;
+            FileEditor.Text = await File.ReadAllTextAsync(filePath);
+            var canEdit = ViewModel.SelectedFile.IsWriteAble;
+            FileEditor.IsReadOnly = !canEdit;
+            SaveFileBtn.Visibility = canEdit? Visibility.Visible : Visibility.Collapsed;
+            FileEditorGrid.Visibility = Visibility.Visible;
+            //var fileStream = new FileStream(filePath + ".rtf", FileMode.Open);
+            //FileEditor.Document.LoadFromStream(TextSetOptions.FormatRtf, fileStream.AsRandomAccessStream());
+            //fileStream.Close();
+        }
+    }
+
+    private async void SaveFileBtn_Click(object sender, RoutedEventArgs e)
+    {
+        if (ViewModel.SelectedFile != null)
+        {
+            var filePath = ViewModel.SelectedFile.FilePath;
+            await File.WriteAllTextAsync(filePath, FileEditor.Text);
         }
     }
 }

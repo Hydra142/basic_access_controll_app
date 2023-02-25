@@ -66,6 +66,7 @@ namespace SafeMessenge.Properties {
         ///    Users.UserName AS [Name],
         ///    Users.Password AS [Password],
         ///    Users.IsAdmin AS [IsAdmin],
+        ///    Users.ClearanceId AS [ClearanceId],
         ///    PaswordTypes.Id AS [PasswordTypeId],
         ///    PaswordTypes.Name AS [PasswordTypeName],
         ///    PaswordTypes.ValidationRegex AS [PasswordValidationRegex],
@@ -90,10 +91,29 @@ namespace SafeMessenge.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to SELECT
+        ///    SC.Id AS Id,
+        ///    SC.Lvl AS Lvl,
+        ///    SC.Name AS Name,
+        ///    SC.ActionTypeId AS ActionTypeId,
+        ///    AT.IsReadAble AS IsReadAble,
+        ///    AT.IsWriteAble AS IsWriteAble,
+        ///    AT.Name AS ActionTypeName
+        ///FROM SecurityClearances AS SC
+        ///LEFT JOIN ActionTypes AS AT ON AT.Id = SC.ActionTypeId.
+        /// </summary>
+        internal static string GetSecurityClearances {
+            get {
+                return ResourceManager.GetString("GetSecurityClearances", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SELECT
         ///    Users.Id AS [Id],
         ///    Users.UserName AS [Name],
         ///    Users.Password AS [Password],
         ///    Users.IsAdmin AS [IsAdmin],
+        ///    Users.ClearanceId AS [ClearanceId],
         ///    PaswordTypes.Id AS [PasswordTypeId],
         ///    PaswordTypes.Name AS [PasswordTypeName],
         ///    PaswordTypes.ValidationRegex AS [PasswordValidationRegex],
@@ -109,6 +129,29 @@ namespace SafeMessenge.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to SELECT
+        ///    F.Id AS Id,
+        ///    F.Name AS Name,
+        ///    F.FilePath AS FilePath,
+        ///    SC.Name AS ClearanceName,
+        ///    AT.IsReadAble AS IsReadAble,
+        ///    AT.IsWriteAble AS IsWriteAble
+        ///FROM Files F
+        ///LEFT JOIN SecurityClearances AS SC ON SC.Id = F.MinimumClearanceId
+        ///LEFT JOIN ActionTypes AS AT ON AT.Id = SC.ActionTypeId
+        ///WHERE SC.Lvl &lt;= (
+        ///                    SELECT
+        ///                        MAX(USC.Lvl) AS Lvl
+        ///                    FROM Users AS U
+        ///                    LEFT JOIN SecurityClearances AS USC ON USC.Id = U. [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string GetUserFilesByUserId {
+            get {
+                return ResourceManager.GetString("GetUserFilesByUserId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to DROP TABLE IF EXISTS [PaswordTypes];
         ///CREATE TABLE IF NOT EXISTS [PaswordTypes] (
         ///  [Id] INTEGER PRIMARY KEY AUTOINCREMENT
@@ -117,9 +160,9 @@ namespace SafeMessenge.Properties {
         ///, [Description] TEXT NOT NULL
         ///, [Created] DATETIME default current_timestamp
         ///);
-        ///INSERT OR IGNORE INTO PaswordTypes ([Name], [ValidationRegex], [Description]) VALUES
-        ///(&apos;Простий&apos;, &apos;.&apos;, &apos;Пароль повивнен містити мінімум один символ&apos;),
-        ///(&apos;Складний&apos;, &apos;^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$&apos;, &apos;Пароль має містити мі [rest of string was truncated]&quot;;.
+        ///INSERT OR IGNORE INTO PaswordTypes ([Id],[Name], [ValidationRegex], [Description]) VALUES
+        ///(1, &apos;Простий&apos;, &apos;.&apos;, &apos;Пароль повивнен містити мінімум один символ&apos;),
+        ///(2, &apos;Складний&apos;, &apos;^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$&apos;, &apos;Пароль має [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string InsertTables {
             get {
@@ -129,7 +172,18 @@ namespace SafeMessenge.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to INSERT INTO Users ([UserName], [Password], [PasswordTypeId], [IsAdmin]) VALUES
-        ///(@Name, &apos;&apos;, @PasswordTypeId, @IsAdmin).
+        ///(@UserName, &apos;&apos;, @PasswordTypeId, @IsAdmin);
+        ///SELECT
+        ///    Users.Id AS [Id],
+        ///    Users.UserName AS [Name],
+        ///    Users.Password AS [Password],
+        ///    Users.IsAdmin AS [IsAdmin],
+        ///    Users.ClearanceId AS [ClearanceId],
+        ///    PaswordTypes.Id AS [PasswordTypeId],
+        ///    PaswordTypes.Name AS [PasswordTypeName],
+        ///    PaswordTypes.ValidationRegex AS [PasswordValidationRegex],
+        ///    PaswordTypes.Description AS [PasswordTypeDescription]
+        ///FROM  [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string InsertUser {
             get {
@@ -139,15 +193,29 @@ namespace SafeMessenge.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to UPDATE [Users] SET
+        ///[UserName] = @UserName,
         ///[Password] = @Password,
         ///[IsAdmin] = @IsAdmin,
-        ///[PasswordTypeId] = @PasswordTypeId
+        ///[PasswordTypeId] = @PasswordTypeId,
+        ///[ClearanceId] = @ClearanceId
         ///WHERE [Id] = @Id;
         ///.
         /// </summary>
         internal static string UpdateUser {
             get {
                 return ResourceManager.GetString("UpdateUser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to UPDATE [Users] SET
+        ///[Password] = @Password,
+        ///WHERE [Id] = @Id;
+        ///.
+        /// </summary>
+        internal static string UpdateUserPassword {
+            get {
+                return ResourceManager.GetString("UpdateUserPassword", resourceCulture);
             }
         }
     }

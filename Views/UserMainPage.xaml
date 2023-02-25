@@ -7,8 +7,63 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     xmlns:usercontrols="using:SafeMessenge.UserControls"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    xmlns:models="using:SafeMessenge.Models"
+    Loaded="{x:Bind ViewModel.PageLoaded}">
+    <Page.Resources>
+        <SolidColorBrush x:Key="GridViewItemBackgroundSelectedPressed" Color="#ffd149" />
+        <SolidColorBrush x:Key="GridViewItemBackgroundSelectedPointerOver" Color="#ffd149" />
+        <SolidColorBrush x:Key="GridViewItemBackground" Color="#f57c00" />
+        <SolidColorBrush x:Key="GridViewItemSelectedBorderBrush" Color="#ffd149" />
+        <SolidColorBrush x:Key="GridViewItemSelectedPointerOverBorderBrush" Color="#ffd149" />
+        <SolidColorBrush x:Key="GridViewItemSelectedPressedBorderBrush" Color="#ffd149" />
 
+        <SolidColorBrush x:Key="TextControlBackground" Color="#373737" />
+        <SolidColorBrush x:Key="TextControlBackgroundPointerOver" Color="#373737" />
+        <Style TargetType="TextBlock">
+            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="FontWeight" Value="Normal"/>
+            <Setter Property="FontSize" Value="17"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+        <DataTemplate x:DataType="models:File" x:Key="FileListItemTemplate">
+            <GridViewItem Margin="0 3 0 0" Padding="10" BorderThickness="0 0 0 0">
+                <GridViewItem.Resources>
+                    <Style TargetType="GridViewItem">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="GridViewItem">
+                                    <ListViewItemPresenter
+                                        CornerRadius="10 0 0 10"
+                                        Background="#f57c00"
+                                        PressedBackground="#c66900"
+                                        PointerOverBackground="#c66900"
+                                        SelectedBackground="#ffd149"
+                                        SelectedPointerOverBackground="#ffd149"
+                                        SelectedPressedBackground="#ffd149"/>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </GridViewItem.Resources>
+                <Grid Padding="8" Width="200">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid Grid.Column="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0" Text="{x:Bind Name}" FontSize="16" VerticalAlignment="Center"/>
+                        <TextBlock Grid.Row="1" Text="{x:Bind ClearanceName}" FontSize="12" VerticalAlignment="Center"/>
+
+                    </Grid>
+                </Grid>
+            </GridViewItem>
+        </DataTemplate>
+    </Page.Resources>
     <Grid x:Name="MainGrid">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -46,6 +101,41 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
+            <GridView
+                x:Name="UserFilesList"
+                ItemsSource="{x:Bind ViewModel.UserFiles, Mode=OneWay}"
+                SelectedItem="{x:Bind ViewModel.SelectedFile, Mode=TwoWay}"
+                ItemTemplate="{StaticResource FileListItemTemplate}"
+                SelectionChanged="UserFilesList_SelectionChanged"
+                Padding="5 0 0 0"
+                Background="#ffa000">
+                <GridView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <ItemsWrapGrid Orientation="Horizontal" MaximumRowsOrColumns="1"/>
+                    </ItemsPanelTemplate>
+                </GridView.ItemsPanel>
+            </GridView>
+            <Grid Grid.Column="1" Name="FileEditorGrid" Visibility="Collapsed">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <!--<RichEditBox Name="FileEditor" Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderBrush="Black" BorderThickness="5" Margin="10">
+                    <RichEditBox.Resources>
+                        <SolidColorBrush x:Key="TextControlBorderBrushPointerOver" Color="Black" />
+                        <SolidColorBrush x:Key="TextControlBackgroundPointerOver" Color="#61532b" />
+                        <SolidColorBrush x:Key="TextControlBackground" Color="#61532b" />
+                    </RichEditBox.Resources>
+                </RichEditBox>-->
+                <TextBox Name="FileEditor" TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderBrush="Black" BorderThickness="5" Margin="10">
+                    <TextBox.Resources>
+                        <SolidColorBrush x:Key="TextControlBorderBrushPointerOver" Color="Black" />
+                        <SolidColorBrush x:Key="TextControlBackgroundPointerOver" Color="#61532b" />
+                        <SolidColorBrush x:Key="TextControlBackground" Color="#61532b" />
+                    </TextBox.Resources>
+                </TextBox>
+                <Button Name="SaveFileBtn" Grid.Row="1" Click="SaveFileBtn_Click" Content="Зберегти" Background="Green" HorizontalAlignment="Center" Margin="10 0 10 10"/>
+            </Grid>
         </Grid>
     </Grid>
 </Page>

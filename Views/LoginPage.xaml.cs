@@ -44,7 +44,7 @@ public sealed partial class LoginPage : Page
             if (isPasswordValid)
             {
                 ViewModel.CyrrentUser.Password = ViewModel.Password;
-                await ViewModel.UpdateUser(ViewModel.CyrrentUser);
+                await ViewModel.UpdateUserPassword(ViewModel.CyrrentUser);
                 NavigateToNextPage();
             } else
             {
