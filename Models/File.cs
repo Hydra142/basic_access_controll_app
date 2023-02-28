@@ -13,6 +13,15 @@ public class File
     public string FilePath;
     public string ClearanceName;
     public string ActionTypeName;
+    public FileType FileType;
     public bool IsReadAble;
     public bool IsWriteAble;
+    public bool IsExecuteAble;
+}
+
+public enum FileType
+{
+    Txt,
+    Img,
+    Exe
 }

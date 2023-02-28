@@ -15,9 +15,15 @@ CREATE TABLE IF NOT EXISTS [ActionTypes] (
   Id INTEGER PRIMARY KEY AUTOINCREMENT,
   IsReadAble BOOLEAN NOT NULL default 0,
   IsWriteAble BOOLEAN NOT NULL default 0,
+  IsExecuteAble BOOLEAN NOT NULL default 0,
   Name TEXT NOT NULL UNIQUE
 );
-INSERT INTO ActionTypes ([Id],[Name],[IsReadAble],[IsWriteAble]) VALUES (1, '(r)', 1, 0), (2, '(r, w)', 1, 1);
+INSERT INTO ActionTypes ([Id],[Name],[IsReadAble],[IsWriteAble], [IsExecuteAble]) VALUES
+(1, '(r)', 1, 0, 0),
+(2, '(r, w)', 1, 1, 0),
+(3, '(r, w, e)', 1, 1, 1),
+(4, '(r, e)', 1, 0, 1),
+(5, '(e)', 0, 0, 1);
 
 
 DROP TABLE IF EXISTS [SecurityClearances];
@@ -55,12 +61,15 @@ CREATE TABLE Files (
   Id INTEGER PRIMARY KEY AUTOINCREMENT,
   Name TEXT NOT NULL UNIQUE,
   FilePath TEXT NOT NULL,
+  FileType INTEGER NOT NULL default 0,
   MinimumClearanceId INTEGER NOT NULL,
   FOREIGN KEY (MinimumClearanceId) REFERENCES SecurityClearances (Id)
 );
-INSERT INTO Files ([Id],[Name],[FilePath],[MinimumClearanceId]) VALUES
-(1, 'ЗвичайнийФайл','D:\LabsData\TBD\TBD_Redchych\Data\TextFile1.txt', 1),
-(2, 'СлужбовийФайл','D:\LabsData\TBD\TBD_Redchych\Data\TextFile2.txt', 2),
-(3, 'ТаємнийФайл','D:\LabsData\TBD\TBD_Redchych\Data\TextFile3.txt', 3);
+INSERT INTO Files ([Id],[Name],[FilePath],[MinimumClearanceId], [FileType]) VALUES
+(1, 'ЗвичайнийФайл','D:\LabsData\TBD\TBD_Redchych\Data\TextFile1.txt', 1, 0),
+(2, 'СлужбовийФайл','D:\LabsData\TBD\TBD_Redchych\Data\TextFile2.txt', 2, 0),
+(3, 'ТаємнийФайл','D:\LabsData\TBD\TBD_Redchych\Data\TextFile3.txt', 3, 0),
+(4, 'Таємниа картинка','D:\LabsData\TBD\TBD_Redchych\Data\ImgFile.png', 3, 1),
+(5, 'Таємний .exe','D:\LabsData\TBD\TBD_Redchych\Data\secret_executable_file.exe', 3, 2);
 
 

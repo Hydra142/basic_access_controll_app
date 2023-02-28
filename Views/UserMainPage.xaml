@@ -117,7 +117,7 @@
                     </ItemsPanelTemplate>
                 </GridView.ItemsPanel>
             </GridView>
-            <Grid Grid.Column="1" Name="FileEditorGrid" Visibility="Collapsed">
+            <Grid Grid.Column="1" Name="TxtFileEditorGrid" Visibility="Collapsed">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="Auto"/>
@@ -136,7 +136,20 @@
                         <SolidColorBrush x:Key="TextControlBackground" Color="#61532b" />
                     </TextBox.Resources>
                 </TextBox>
-                <Button Name="SaveFileBtn" Grid.Row="1" Click="SaveFileBtn_Click" Content="Зберегти" Background="Green" HorizontalAlignment="Center" Margin="10 0 10 10"/>
+                <Button Name="SaveTxtFileBtn" Grid.Row="1" Click="SaveTxtFileBtn_Click" Content="Зберегти" Background="Green" HorizontalAlignment="Center" Margin="10 0 10 10"/>
+            </Grid>
+            <Grid Grid.Column="1" Name="ImgFileEditorGrid" Visibility="Collapsed">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Image Name="ImageControl" Stretch="Fill" Width="400" Height="400">
+                    
+                </Image>
+                <Button Name="EditImgFileBtn" Grid.Row="1" Click="EditImgFileBtn_Click" Content="Замінити" Background="Green" HorizontalAlignment="Center" Margin="10 0 10 10"/>
+            </Grid>
+            <Grid Grid.Column="1" Name="ExecutableFileGrid" Visibility="Collapsed">
+                <Button Name="ExecuteFileBtn" Grid.Row="1" Click="ExecuteFileBtn_Click" Content="Запустити програму" Background="Green" HorizontalAlignment="Center" Margin="10 0 10 10"/>
             </Grid>
         </Grid>
     </Grid>

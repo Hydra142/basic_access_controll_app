@@ -1,1 +1,1 @@
-SELECT Id, IsReadAble, IsWriteAble, Name FROM ActionTypes
+SELECT Id, IsReadAble, IsWriteAble, IsExecuteAble, Name FROM ActionTypes

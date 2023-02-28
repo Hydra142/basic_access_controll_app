@@ -11,5 +11,6 @@ public class ActionType
     public int Id;
     public bool IsReadAble;
     public bool IsWriteAble;
+    public bool IsExecuteAble;
     public string Name;
 }
