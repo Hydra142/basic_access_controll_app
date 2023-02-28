@@ -62,7 +62,8 @@ public class SqliteConnectorService : ISqliteConnector
     {
         using var connection = new SqliteConnection(_connectionStringBuilder.ConnectionString);
         connection.Open();
-        return (await connection.QueryAsync<T>(sql, options)).ToList();
+        var res = (await connection.QueryAsync<T>(sql, options)).ToList();
+        return res;
     }
 
     public Task<int> Write(string sql, object options)

@@ -61,12 +61,22 @@ namespace SafeMessenge.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        internal static string GetActionTypes {
+            get {
+                return ResourceManager.GetString("GetActionTypes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to SELECT
         ///    Users.Id AS [Id],
         ///    Users.UserName AS [Name],
         ///    Users.Password AS [Password],
         ///    Users.IsAdmin AS [IsAdmin],
         ///    Users.ClearanceId AS [ClearanceId],
+        ///    Users.ActionTypeId AS [ActionTypeId],
         ///    PaswordTypes.Id AS [PasswordTypeId],
         ///    PaswordTypes.Name AS [PasswordTypeName],
         ///    PaswordTypes.ValidationRegex AS [PasswordValidationRegex],
@@ -93,13 +103,8 @@ namespace SafeMessenge.Properties {
         ///   Looks up a localized string similar to SELECT
         ///    SC.Id AS Id,
         ///    SC.Lvl AS Lvl,
-        ///    SC.Name AS Name,
-        ///    SC.ActionTypeId AS ActionTypeId,
-        ///    AT.IsReadAble AS IsReadAble,
-        ///    AT.IsWriteAble AS IsWriteAble,
-        ///    AT.Name AS ActionTypeName
-        ///FROM SecurityClearances AS SC
-        ///LEFT JOIN ActionTypes AS AT ON AT.Id = SC.ActionTypeId.
+        ///    SC.Name AS Name
+        ///FROM SecurityClearances AS SC.
         /// </summary>
         internal static string GetSecurityClearances {
             get {
@@ -114,13 +119,14 @@ namespace SafeMessenge.Properties {
         ///    Users.Password AS [Password],
         ///    Users.IsAdmin AS [IsAdmin],
         ///    Users.ClearanceId AS [ClearanceId],
+        ///    Users.ActionTypeId AS [ActionTypeId],
         ///    PaswordTypes.Id AS [PasswordTypeId],
         ///    PaswordTypes.Name AS [PasswordTypeName],
         ///    PaswordTypes.ValidationRegex AS [PasswordValidationRegex],
         ///    PaswordTypes.Description AS [PasswordTypeDescription]
         ///FROM Users
         ///LEFT JOIN PaswordTypes ON PaswordTypes.Id = PasswordTypeId
-        ///WHERE Users.Id = @Id;.
+        ///WHERE Users.Id  [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string GetUserById {
             get {
@@ -197,7 +203,8 @@ namespace SafeMessenge.Properties {
         ///[Password] = @Password,
         ///[IsAdmin] = @IsAdmin,
         ///[PasswordTypeId] = @PasswordTypeId,
-        ///[ClearanceId] = @ClearanceId
+        ///[ClearanceId] = @ClearanceId,
+        ///[ActionTypeId] = @ActionTypeId
         ///WHERE [Id] = @Id;
         ///.
         /// </summary>
@@ -209,7 +216,7 @@ namespace SafeMessenge.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to UPDATE [Users] SET
-        ///[Password] = @Password,
+        ///[Password] = @Password
         ///WHERE [Id] = @Id;
         ///.
         /// </summary>

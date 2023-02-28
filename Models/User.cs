@@ -15,10 +15,11 @@ public class User
     public string PasswordValidationRegex;
     public string PasswordTypeDescription;
     public int ClearanceId;
+    public int ActionTypeId;
     public string Avatar => $"https://dummyimage.com/400x400/000000/0011ff&text={(Password.IsNullOrEmpty() ? "Новий" : Name)}";
 
     public object ToObject()
     {
-        return new { Id = Id, UserName = Name, Password = Password, IsAdmin = IsAdmin, PasswordTypeId = PasswordTypeId, ClearanceId = ClearanceId };
+        return new { Id = Id, UserName = Name, Password = Password, IsAdmin = IsAdmin, PasswordTypeId = PasswordTypeId, ClearanceId = ClearanceId, ActionTypeId = ActionTypeId };
     }
 }

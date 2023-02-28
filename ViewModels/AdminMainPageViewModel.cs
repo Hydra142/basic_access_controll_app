@@ -49,6 +49,20 @@ namespace SafeMessenge.ViewModels
                 SetProperty(ref _selectedSecurityClearanceOption, value);
             }
         }
+        public List<ComboBoxOptionHelper.ComboBoxOption> ActionTypeOptions { get; set; } = new();
+        private ComboBoxOptionHelper.ComboBoxOption? _selectedActionTypeOption;
+        public ComboBoxOptionHelper.ComboBoxOption? SelectedActionTypeOption
+        {
+            get => _selectedActionTypeOption;
+            set
+            {
+                if (value != null && SelectedUser != null)
+                {
+                    SelectedUser.ActionTypeId = int.Parse(value.Key);
+                }
+                SetProperty(ref _selectedActionTypeOption, value);
+            }
+        }
         private User _CurrentUser = new();
         private User? _selectedUser;
         public User CurrentUser 
@@ -66,6 +80,8 @@ namespace SafeMessenge.ViewModels
                 SetProperty(ref _selectedUser, value);
                 if (value != null)
                 {
+
+                    SelectedActionTypeOption = ComboBoxOptionHelper.GetOptionByKey(value.ActionTypeId.ToString(), ActionTypeOptions);
                     SelectedPasswordTypeOption = ComboBoxOptionHelper.GetOptionByKey(value.PasswordTypeId.ToString(), PasswordTypeOptions);
                     SelectedSecurityClearanceOption = ComboBoxOptionHelper.GetOptionByKey(value.ClearanceId.ToString(), SecurityClearanceOptions);
                 }
@@ -95,6 +111,10 @@ namespace SafeMessenge.ViewModels
             foreach (var clearance in appDataService.SecurityClearances)
             {
                 SecurityClearanceOptions.Add(new(clearance.Id.ToString(), clearance.Name));
+            }
+            foreach (var actionType in appDataService.ActionTypes)
+            {
+                ActionTypeOptions.Add(new(actionType.Id.ToString(), actionType.Name));
             }
             AppDataService.Users.Where(x => !x.IsAdmin).ToList().ForEach(user => Users.Add(user));
         }

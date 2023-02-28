@@ -12,6 +12,7 @@ public class File
     public string Name;
     public string FilePath;
     public string ClearanceName;
+    public string ActionTypeName;
     public bool IsReadAble;
     public bool IsWriteAble;
 }

@@ -1,0 +1,1 @@
+SELECT Id, IsReadAble, IsWriteAble, Name FROM ActionTypes

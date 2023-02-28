@@ -3,5 +3,6 @@
 [Password] = @Password,
 [IsAdmin] = @IsAdmin,
 [PasswordTypeId] = @PasswordTypeId,
-[ClearanceId] = @ClearanceId
+[ClearanceId] = @ClearanceId,
+[ActionTypeId] = @ActionTypeId
 WHERE [Id] = @Id;

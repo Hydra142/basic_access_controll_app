@@ -11,5 +11,4 @@ public class SecurityClearance
     public int Id;
     public int Lvl;
     public string Name;
-    public int ActionTypeId;
 }

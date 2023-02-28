@@ -14,6 +14,7 @@ public class AppDataService
     public List<User> Users { get; set; } = new();
     public List<PasswordType> PasswordTypes { get; set; } = new();
     public List<SecurityClearance> SecurityClearances { get; set; } = new();
+    public List<ActionType> ActionTypes { get; set; } = new();
     public User? CurrentUser { get; set; }
 
     private ISqliteConnector _sqliteConnector;
@@ -23,6 +24,7 @@ public class AppDataService
         _sqliteConnector = conn;
         _ = SetPasswordTypes();
         _ = LoadSecurityClearances();
+        _ = LoadActionTypes();
     }
 
     public async Task<List<User>> SetUsers()
@@ -72,6 +74,10 @@ public class AppDataService
     public async Task LoadSecurityClearances()
     {
         SecurityClearances = (await _sqliteConnector.Read<SecurityClearance>(Resources.GetSecurityClearances, new { })).ToList();
+    }
+    public async Task LoadActionTypes()
+    {
+        ActionTypes = (await _sqliteConnector.Read<ActionType>(Resources.GetActionTypes, new { })).ToList();
     }
 
     public async Task<User?> CreateUser(User user)
