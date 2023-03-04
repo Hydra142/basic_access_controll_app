@@ -32,7 +32,7 @@ public sealed partial class EditUserDialog : UserControl
     {
         if (UserData != null)
         {
-            UserName.Text = UserData.Name;
+            UserName.Text = UserData._Name;
             UserPassword.Text = UserData.Password;
         }
     }

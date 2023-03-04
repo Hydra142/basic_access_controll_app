@@ -51,6 +51,7 @@ public class LoginPageViewModel : ObservableRecipient
     {
         NavigationService = navigationService;
         AppDataService = appDataService;
+        Password = "q";
     }
 
     public async Task PageLoaded()

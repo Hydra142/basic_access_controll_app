@@ -61,11 +61,26 @@ namespace SafeMessenge.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to SELECT Id, IsReadAble, IsWriteAble, IsExecuteAble, Name FROM ActionTypes.
         /// </summary>
         internal static string GetActionTypes {
             get {
                 return ResourceManager.GetString("GetActionTypes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SELECT
+        ///	Id,
+        ///	Name,
+        ///	FilePath,
+        ///	FileType,
+        ///	MinimumClearanceId
+        ///FROM Files.
+        /// </summary>
+        internal static string GetAllFiles {
+            get {
+                return ResourceManager.GetString("GetAllFiles", resourceCulture);
             }
         }
         
@@ -139,21 +154,32 @@ namespace SafeMessenge.Properties {
         ///    F.Id AS Id,
         ///    F.Name AS Name,
         ///    F.FilePath AS FilePath,
+        ///    F.FileType AS FileType,
         ///    SC.Name AS ClearanceName,
+        ///    AT.Name AS ActionTypeName,
         ///    AT.IsReadAble AS IsReadAble,
-        ///    AT.IsWriteAble AS IsWriteAble
+        ///    AT.IsWriteAble AS IsWriteAble,
+        ///    AT.IsExecuteAble AS IsExecuteAble
         ///FROM Files F
+        ///CROSS JOIN Users AS U
         ///LEFT JOIN SecurityClearances AS SC ON SC.Id = F.MinimumClearanceId
-        ///LEFT JOIN ActionTypes AS AT ON AT.Id = SC.ActionTypeId
-        ///WHERE SC.Lvl &lt;= (
-        ///                    SELECT
-        ///                        MAX(USC.Lvl) AS Lvl
-        ///                    FROM Users AS U
-        ///                    LEFT JOIN SecurityClearances AS USC ON USC.Id = U. [rest of string was truncated]&quot;;.
+        ///LEFT JOIN ActionTypes AS AT ON AT.Id = U.ActionTypeId
+        ///WHERE U.Id = @UserId AND ((F.FileType IN(0, 1) AND (AT.IsReadAble OR AT.IsWr [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string GetUserFilesByUserId {
             get {
                 return ResourceManager.GetString("GetUserFilesByUserId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to INSERT OR REPLACE INTO table_name (Id, Name, FilePath, FileType, MinimumClearanceId)
+        ///VALUES (@Id, @Name, @FilePath, @FileType, @MinimumClearanceId)
+        ////*ON DUPLICATE KEY UPDATE Name = @Name, FilePath = @FilePath, FileType = @FileType, MinimumClearanceId =@MinimumClearanceId*/.
+        /// </summary>
+        internal static string InsertOrUpdateFile {
+            get {
+                return ResourceManager.GetString("InsertOrUpdateFile", resourceCulture);
             }
         }
         

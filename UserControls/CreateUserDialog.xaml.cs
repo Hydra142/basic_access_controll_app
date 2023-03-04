@@ -51,7 +51,7 @@ public sealed partial class CreateUserDialog : UserControl
         {
             NewUserData = new()
             {
-                Name = UserName,
+                _Name = UserName,
                 PasswordTypeId = int.Parse(SelectedPasswordTypeOption.Key)
             };
         }

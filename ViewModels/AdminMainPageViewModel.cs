@@ -8,6 +8,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
@@ -21,6 +22,14 @@ namespace SafeMessenge.ViewModels
     {
         public NavigationService NavigationService { get; set; }
         public AppDataService AppDataService { get; set; }
+        public readonly AdminSection[] AdminSections = new AdminSection[] { AdminSection.User, AdminSection.File };
+        private User _currentUser = new();
+        public User CurrentUser
+        {
+            get => _currentUser;
+            set => SetProperty(ref _currentUser, value);
+        }
+        //user section
         public List<ComboBoxOptionHelper.ComboBoxOption> PasswordTypeOptions { get; set; } = new();
         private ComboBoxOptionHelper.ComboBoxOption? _selectedPasswordTypeOption;
         public ComboBoxOptionHelper.ComboBoxOption? SelectedPasswordTypeOption
@@ -63,15 +72,8 @@ namespace SafeMessenge.ViewModels
                 SetProperty(ref _selectedActionTypeOption, value);
             }
         }
-        private User _CurrentUser = new();
-        private User? _selectedUser;
-        public User CurrentUser 
-        {
-            get => _CurrentUser;
-            set => SetProperty(ref _CurrentUser, value);
-        }
         public ObservableCollection<User> Users = new();
-
+        private User? _selectedUser;
         public User? SelectedUser
         {
             get => _selectedUser;
@@ -88,7 +90,35 @@ namespace SafeMessenge.ViewModels
             }
         }
 
+        //file section
+        public ObservableCollection<File> Files = new();
+        private File? _selectedFile;
+        public File? SelectedFile
+        { 
+            get => _selectedFile;
+            set
+            {
+                SetProperty(ref _selectedFile, value);
+                if (value != null)
+                {
+                    SelectedFileSecurityClearanceOption = ComboBoxOptionHelper.GetOptionByKey(value.MinimumClearanceId.ToString(), SecurityClearanceOptions);
+                }
+            }
+        }
 
+        private ComboBoxOptionHelper.ComboBoxOption? _selectedFileSecurityClearanceOption;
+        public ComboBoxOptionHelper.ComboBoxOption? SelectedFileSecurityClearanceOption
+        {
+            get => _selectedFileSecurityClearanceOption;
+            set
+            {
+                if (value != null && SelectedFile != null)
+                {
+                    SelectedFile.MinimumClearanceId = int.Parse(value.Key);
+                }
+                SetProperty(ref _selectedFileSecurityClearanceOption, value);
+            }
+        }
 
 
 
@@ -116,6 +146,7 @@ namespace SafeMessenge.ViewModels
             {
                 ActionTypeOptions.Add(new(actionType.Id.ToString(), actionType.Name));
             }
+            AppDataService.Files.ForEach(file => Files.Add(file));
             AppDataService.Users.Where(x => !x.IsAdmin).ToList().ForEach(user => Users.Add(user));
         }
 
@@ -126,5 +157,25 @@ namespace SafeMessenge.ViewModels
                 SelectedUser = await AppDataService.UpdateUserData(SelectedUser);
             }
         }
+        public async void SaveFile()
+        {
+            if (SelectedFile != null)
+            {
+                var file = await AppDataService.InsertOrUpdateFile(SelectedFile);
+            }
+        }
+
+        public void LoadCreateFileTemplate()
+        {
+            Files.Insert(0, new File() { Name = "Новий файл", MinimumClearanceId = AppDataService.SecurityClearances.First().Id });
+            SelectedFile = Files[0];
+        }
+    }
+    public enum AdminSection
+    {
+        [Display(Name = "Користувачі")]
+        User,
+        [Display(Name = "Файли")]
+        File
     }
 }

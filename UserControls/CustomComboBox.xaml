@@ -17,6 +17,7 @@
         <ComboBox
                 Grid.Column="0"
                 x:Name="ComboBox"
+            SelectedValuePath="Key"
                 ItemsSource="{x:Bind ItemsSource, Mode=OneWay}"
                 SelectionChanged="ComboBox_SelectionChanged"
                 DisplayMemberPath="{x:Bind DisplayMemberPath, Mode=OneWay}"

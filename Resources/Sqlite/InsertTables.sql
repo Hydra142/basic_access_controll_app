@@ -53,7 +53,11 @@ CREATE TABLE IF NOT EXISTS [Users] (
 );
 INSERT INTO Users ([Id],[UserName], [Password], [PasswordTypeId], [IsAdmin], [ActionTypeId]) VALUES
 (1, 'Admin', 'q', 1, 1, 2),
-(2, 'Редчич ', 'q', 1, 0, 2);
+(2, 'Редчич 1', 'q', 1, 0, 2),
+(3, 'Редчич 2', 'q', 1, 0, 2),
+(4, 'Редчич 3', 'q', 1, 0, 2),
+(5, 'Редчич 4', 'q', 1, 0, 2),
+(6, 'Редчич 5', 'q', 1, 0, 2);
 
 
 DROP TABLE IF EXISTS [Files];

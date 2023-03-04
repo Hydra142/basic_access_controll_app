@@ -63,21 +63,23 @@ public sealed partial class UserMainPage : Page
             var filePath = ViewModel.SelectedFile.FilePath;
             var canEdit = ViewModel.SelectedFile.IsWriteAble;
             var canExecute = ViewModel.SelectedFile.IsExecuteAble;
-            if (selectedFile.FileType == Models.FileType.Txt)
+            if (selectedFile.FileType == Models.FileTypes.Txt)
             {
                 FileEditor.Text = await File.ReadAllTextAsync(filePath);
                 FileEditor.IsReadOnly = !canEdit;
+                /*Відображаємо кнопку зміни тільки у випадку коли редагування дозволено*/
                 SaveTxtFileBtn.Visibility = canEdit ? Visibility.Visible : Visibility.Collapsed;
                 TxtFileEditorGrid.Visibility = Visibility.Visible;
             }
-            else if (selectedFile.FileType == Models.FileType.Img)
+            else if (selectedFile.FileType == Models.FileTypes.Img)
             {
                 ImgFileEditorGrid.Visibility = Visibility.Visible;
+                /*Відображаємо кнопку зміни тільки у випадку коли редагування дозволено*/
                 EditImgFileBtn.Visibility = canEdit ? Visibility.Visible : Visibility.Collapsed;
                 var storageFile = await StorageFile.GetFileFromPathAsync(filePath);
                 await LoadImageContent(storageFile);
             }
-            else if (selectedFile.FileType == Models.FileType.Exe)
+            else if (selectedFile.FileType == Models.FileTypes.Exe)
             {
                 ExecutableFileGrid.Visibility = Visibility.Visible;
                 ExecuteFileBtn.Visibility = canExecute ? Visibility.Visible : Visibility.Collapsed;

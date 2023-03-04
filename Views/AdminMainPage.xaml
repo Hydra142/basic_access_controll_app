@@ -8,6 +8,7 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
     <Page.Resources>
+        <helpers:AdminSectionEnumToStringConverter x:Key="AdminSectionEnumToStringConverter"/>
         <helpers:ArrayToVisibilityConverter x:Key="ArrayToVisibilityConverter"/>
         <helpers:ObjectToVisibilityConverter x:Key="ObjectToVisibilityConverter"/>
         <!--<SolidColorBrush x:Key="ListViewItemSelectionIndicatorBrush" Color="#ffd149" />
@@ -81,6 +82,38 @@
                 </Grid>
             </GridViewItem>
         </DataTemplate>
+        <DataTemplate x:DataType="models:File" x:Key="FileListItemTemplate">
+            <GridViewItem Margin="0 3 0 0" Padding="10" BorderThickness="0 0 0 0">
+                <GridViewItem.Resources>
+                    <Style TargetType="GridViewItem">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="GridViewItem">
+                                    <ListViewItemPresenter
+                                        CornerRadius="10 0 0 10"
+                                        Background="#f57c00"
+                                        PressedBackground="#c66900"
+                                        PointerOverBackground="#c66900"
+                                        SelectedBackground="#ffd149"
+                                        SelectedPointerOverBackground="#ffd149"
+                                        SelectedPressedBackground="#ffd149"/>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </GridViewItem.Resources>
+                <Grid Padding="8" Width="200">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <RichTextBlock IsTextSelectionEnabled="False" FontSize="17" VerticalAlignment="Center" Margin="0 0 0 0">
+                        <Paragraph>
+                            <Run Text="{x:Bind Name, Mode=OneWay}"/>
+                        </Paragraph>
+                    </RichTextBlock>
+                </Grid>
+            </GridViewItem>
+        </DataTemplate>
     </Page.Resources>
     <Grid x:Name="MainGrid">
         <Grid.RowDefinitions>
@@ -93,13 +126,24 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <Button Click="CreateUser" Background="#ffa726" Padding="15, 6" CornerRadius="15">
-                <StackPanel Orientation="Horizontal">
-                    <ProgressRing Name="LoadingNewChatIcon" IsActive="True" Width="25" Height="25" Margin="2" Foreground="Black" Visibility="Collapsed"/>
-                    <Image Name="CreateChatIcon" Source="/Assets/plus.png" Height="25" Margin="0 0 15 0" Visibility="Visible"/>
-                    <TextBlock Text="Створити користувача" VerticalAlignment="Center"/>
-                </StackPanel>
-            </Button>
+            <GridView
+                x:Name="AdminSectionsList"
+                ItemsSource="{x:Bind ViewModel.AdminSections, Mode=OneWay}"
+                SelectionChanged="AdminSectionsList_SelectionChanged"
+                SelectedIndex="0"
+                Padding="5 0 0 0"
+                >
+                <GridView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <ItemsWrapGrid Orientation="Vertical" MaximumRowsOrColumns="1"/>
+                    </ItemsPanelTemplate>
+                </GridView.ItemsPanel>
+                <GridView.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Padding="10 0" Text="{Binding Converter={StaticResource AdminSectionEnumToStringConverter}}"/>
+                    </DataTemplate>
+                </GridView.ItemTemplate>
+            </GridView>
             <Grid Grid.Column="1" ColumnSpacing="15" Padding="15, 6" Background="#ffa726" CornerRadius="15" HorizontalAlignment="Right">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
@@ -117,24 +161,33 @@
                 </Button>
             </Grid>
         </Grid>
-        <Grid Grid.Row="1" Background="#ffd149">
+        <Grid Grid.Row="1" Background="#ffd149" Name="UsersSection">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <GridView
+            <StackPanel Orientation="Vertical" Background="#ffa000">
+                <Button Click="CreateUser" Background="#bc5100" Margin="5" Padding="15, 6" CornerRadius="15" HorizontalAlignment="Stretch">
+                    <StackPanel Orientation="Horizontal">
+                        <ProgressRing Name="LoadingNewChatIcon" IsActive="True" Width="25" Height="25" Margin="2" Foreground="Black" Visibility="Collapsed"/>
+                        <Image Name="CreateChatIcon" Source="/Assets/plus.png" Height="25" Margin="0 0 15 0" Visibility="Visible"/>
+                        <TextBlock Text="Створити" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+                <GridView
                 x:Name="Users"
                 ItemsSource="{x:Bind ViewModel.Users, Mode=OneWay}"
                 SelectedItem="{x:Bind ViewModel.SelectedUser, Mode=TwoWay}"
                 ItemTemplate="{StaticResource UserListItemTemplate}"
                 Padding="5 0 0 0"
-                Background="#ffa000">
-                <GridView.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <ItemsWrapGrid Orientation="Horizontal" MaximumRowsOrColumns="1"/>
-                    </ItemsPanelTemplate>
-                </GridView.ItemsPanel>
-            </GridView>
+                >
+                    <GridView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <ItemsWrapGrid Orientation="Horizontal" MaximumRowsOrColumns="1"/>
+                        </ItemsPanelTemplate>
+                    </GridView.ItemsPanel>
+                </GridView>
+            </StackPanel>
             <Grid Grid.Column="1">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -180,6 +233,76 @@
                         ItemsSource="{x:Bind ViewModel.ActionTypeOptions, Mode=OneWay}"
                         SelectedItem="{x:Bind ViewModel.SelectedActionTypeOption, Mode=TwoWay}"/>
                     <Button Grid.Row="5" Grid.Column="1" Content="Зберегти" HorizontalAlignment="Right" Background="red" Click="{x:Bind ViewModel.SaveUserData}"/>
+                </Grid>
+            </Grid>
+        </Grid>
+        <Grid Grid.Row="1" Background="#ffd149" Name="FilesSection">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel Orientation="Vertical" Background="#ffa000">
+                <Button Click="{x:Bind ViewModel.LoadCreateFileTemplate}" Background="#bc5100" Margin="5" Padding="15, 6" CornerRadius="15" HorizontalAlignment="Stretch">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/Assets/plus.png" Height="25" Margin="0 0 15 0" Visibility="Visible"/>
+                        <TextBlock Text="Створити" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+                <GridView
+                x:Name="Files"
+                ItemsSource="{x:Bind ViewModel.Files, Mode=OneWay}"
+                SelectedItem="{x:Bind ViewModel.SelectedFile, Mode=TwoWay}"
+                ItemTemplate="{StaticResource FileListItemTemplate}"
+                Padding="5 0 0 0"
+                >
+                    <GridView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <ItemsWrapGrid Orientation="Horizontal" MaximumRowsOrColumns="1"/>
+                        </ItemsPanelTemplate>
+                    </GridView.ItemsPanel>
+                </GridView>
+            </StackPanel>
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid HorizontalAlignment="Left" Padding="10" RowSpacing="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="150"/>
+                        <ColumnDefinition Width="300"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Назва:" VerticalAlignment="Center" FontSize="18" FontWeight="Normal" Foreground="Black"/>
+                    <TextBox Grid.Row="0" Grid.Column="1" Text="{x:Bind ViewModel.SelectedFile.Name, Mode=TwoWay}"/>
+                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Розташування:" VerticalAlignment="Center" FontSize="18" FontWeight="Normal" Foreground="Black"/>
+                    <Grid Grid.Row="1" Grid.Column="1" ColumnSpacing="5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox Grid.Column="0" Text="{x:Bind ViewModel.SelectedFile.FilePath, Mode=TwoWay}" HorizontalAlignment="Stretch"/>
+                        <Button Grid.Column="1" Click="SetFilePath" Background="Gray" Content="Обрати"/>
+                    </Grid>
+                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Рівень доступу:" VerticalAlignment="Center" FontSize="18" FontWeight="Normal" Foreground="Black"/>
+                    <usercontrols:CustomComboBox
+                        HorizontalAlignment="Left"
+                        MinWidth="150"
+                        Grid.Row="2"
+                        Grid.Column="1"
+                        DisplayMemberPath="Value"
+                        ItemsSource="{x:Bind ViewModel.SecurityClearanceOptions, Mode=OneWay}"
+                        SelectedItem="{x:Bind ViewModel.SelectedFileSecurityClearanceOption, Mode=TwoWay}"/>
+                    
+                    <Button Grid.Row="5" Grid.Column="1" Content="Зберегти" HorizontalAlignment="Right" Background="red" Click="{x:Bind ViewModel.SaveFile}"/>
                 </Grid>
             </Grid>
         </Grid>

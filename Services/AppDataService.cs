@@ -16,15 +16,17 @@ public class AppDataService
     public List<SecurityClearance> SecurityClearances { get; set; } = new();
     public List<ActionType> ActionTypes { get; set; } = new();
     public User? CurrentUser { get; set; }
+    public List<File> Files { get; set; } = new();
 
     private ISqliteConnector _sqliteConnector;
 
     public AppDataService(ISqliteConnector conn)
     {
         _sqliteConnector = conn;
-        _ = SetPasswordTypes();
+        _ = LoadPasswordTypes();
         _ = LoadSecurityClearances();
         _ = LoadActionTypes();
+        _ = LoadFiles();
     }
 
     public async Task<List<User>> SetUsers()
@@ -32,14 +34,12 @@ public class AppDataService
         Users = await GetUsers();
         return Users;
     }
-
     public async Task<List<User>> GetUsers()
     {
         var result = new List<User>();
         result.AddRange(await _sqliteConnector.Read<User>(Resources.GetAllUsers, new { }));
         return result;
     }
-
     public async Task<User?> UpdateUserData(User user)
     {
         //запит на зміну данних корстувача
@@ -52,8 +52,6 @@ public class AppDataService
         return null;
 
     }
-
-
     public async Task<User?> UpdateUserPassword(User user)
     {
         //запит на зміну данних корстувача
@@ -66,8 +64,7 @@ public class AppDataService
         return null;
 
     }
-
-    public async Task SetPasswordTypes()
+    public async Task LoadPasswordTypes()
     {
         PasswordTypes = (await _sqliteConnector.Read<PasswordType>(Resources.GetPasswordTypes, new { })).ToList();
     }
@@ -79,7 +76,6 @@ public class AppDataService
     {
         ActionTypes = (await _sqliteConnector.Read<ActionType>(Resources.GetActionTypes, new { })).ToList();
     }
-
     public async Task<User?> CreateUser(User user)
     {
         //створення новго користувача
@@ -91,7 +87,6 @@ public class AppDataService
         }
         return null;
     }
-
     public async Task<List<File>> GetUserFiles(User? user)
     {
         List<File> result = new();
@@ -100,5 +95,19 @@ public class AppDataService
             return result;
         }
         return (await _sqliteConnector.Read<File>(Resources.GetUserFilesByUserId, new { UserId = user.Id })).ToList();
+    }
+    public async Task<List<File>> LoadFiles()
+    {
+        Files = (await _sqliteConnector.Read<File>(Resources.GetAllFiles, new { })).ToList();
+        return Files;
+    }
+    public async Task<File?> InsertOrUpdateFile(File file)
+    {
+        var resp = await _sqliteConnector.Read<File>(Resources.InsertOrUpdateFile, file.ToObject());
+        if (resp != null && resp.Count > 0)
+        {
+            return resp.First();
+        }
+        return null;
     }
 }
