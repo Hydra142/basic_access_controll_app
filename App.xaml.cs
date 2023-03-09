@@ -1,11 +1,13 @@
 ﻿using CommunityToolkit.Mvvm.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
+using SafeMessenge.Contracts;
 using SafeMessenge.Contracts.Services;
 using SafeMessenge.Services;
 using SafeMessenge.ViewModels;
 using SafeMessenge.Views;
 using System;
+using System.Threading.Tasks;
 using WinUIEx;
 
 namespace SafeMessenge;
@@ -19,6 +21,7 @@ public sealed partial class App : Application
             .AddSingleton<NavigationService>()
             .AddSingleton<AppDataService>()
             .AddSingleton<ISqliteConnector, SqliteConnectorService>()
+            .AddSingleton<IActivationService, ActivationService>()
 
             .AddTransient<ShellPageViewModel>()
             .AddTransient<LoginPageViewModel>()
@@ -40,9 +43,10 @@ public sealed partial class App : Application
         return service;
     }
 
-    protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
+    protected override async void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
     {
         base.OnLaunched(args);
+        await Ioc.Default.GetService<IActivationService>().ActivateAsync();
         MainWindow.Content = Ioc.Default.GetService<ShellPage>();
         MainWindow.Activate();
     }

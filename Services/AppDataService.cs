@@ -23,10 +23,13 @@ public class AppDataService
     public AppDataService(ISqliteConnector conn)
     {
         _sqliteConnector = conn;
-        _ = LoadPasswordTypes();
-        _ = LoadSecurityClearances();
-        _ = LoadActionTypes();
-        _ = LoadFiles();
+    }
+    public async Task InitAsync()
+    {
+        await LoadPasswordTypes();
+        await LoadSecurityClearances();
+        await LoadActionTypes();
+        await LoadFiles();
     }
 
     public async Task<List<User>> SetUsers()

@@ -17,10 +17,14 @@ public class SqliteConnectorService : ISqliteConnector
 
     public SqliteConnectorService()
     {
-
+        var path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonDocuments), "TBD/AppData");
+        if (!Directory.Exists(path))
+        {
+            Directory.CreateDirectory(path);
+        }
         _connectionStringBuilder = new()
         {
-            DataSource = Path.Combine("D:\\LabsData\\TBD\\TBD_Redchych\\AppData", FILENAME),
+            DataSource = Path.Combine(path, "sqlite.db"),
             Mode = SqliteOpenMode.ReadWriteCreate,
             Cache = SqliteCacheMode.Default
         };
