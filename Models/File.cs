@@ -10,21 +10,28 @@ namespace SafeMessenge.Models;
 public partial class File
 {
     //db fields
-    public int Id;
+    public int? Id;
     [ObservableProperty]
     public string _Name;
     [ObservableProperty]
     public string _FilePath;
     public FileTypes FileType;
-    public int MinimumClearanceId;
+    
 
     //additional fields
-    public string ClearanceName;
-    public string ActionTypeName;
     public bool IsReadAble;
     public bool IsWriteAble;
     public bool IsExecuteAble;
 
+    //mandatory access model additional fields
+    public string ClearanceName;
+    public string ActionTypeName;
+    public int MinimumClearanceId;
+
+    //Discretionary access model additional fields
+    public DateTime? AllowFrom;
+    public DateTime? AllowTo;
+    public string? AvailabilityTimePeriod;
     public object ToObject()
     {
         return new { Id = Id, Name = Name, FilePath = FilePath, FileType = (int)FileType, MinimumClearanceId = MinimumClearanceId };

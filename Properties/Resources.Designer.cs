@@ -61,7 +61,7 @@ namespace SafeMessenge.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to DELETE DiscretionaryAccessMatrix WHERE Id IN (@Ids).
+        ///   Looks up a localized string similar to DELETE FROM DiscretionaryAccessMatrix WHERE Id IN @Ids.
         /// </summary>
         internal static string DeleteDiscretionaryAccessMatrixItems {
             get {
@@ -112,6 +112,29 @@ namespace SafeMessenge.Properties {
         internal static string GetAllUsers {
             get {
                 return ResourceManager.GetString("GetAllUsers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SELECT
+        ///    F.Id AS Id,
+        ///    F.Name AS Name,
+        ///    F.FilePath AS FilePath,
+        ///    F.FileType AS FileType,
+        ///    AT.Name AS ActionTypeName,
+        ///    AT.IsReadAble AS IsReadAble,
+        ///    AT.IsWriteAble AS IsWriteAble,
+        ///    AT.IsExecuteAble AS IsExecuteAble,
+        ///    DAM.AllowFrom AS AllowFrom,
+        ///    DAM.AllowTo AS AllowTo
+        ///FROM DiscretionaryAccessMatrix DAM
+        ///LEFT JOIN Files AS F ON F.Id = DAM.FileId
+        ///LEFT JOIN ActionTypes AS AT ON AT.Id = DAM.ActionTypeId
+        ///WHERE DAM.UserId = @UserId.
+        /// </summary>
+        internal static string GetDiscretionaryAccessModelUserAvailableFilesById {
+            get {
+                return ResourceManager.GetString("GetDiscretionaryAccessModelUserAvailableFilesById", resourceCulture);
             }
         }
         
@@ -169,8 +192,8 @@ namespace SafeMessenge.Properties {
         ///	M.AllowFrom AS AllowFrom,
         ///	M.AllowTo AS AllowTo,
         ///	M.Id AS IsActive
-        ///FROM Users AS U
-        ///CROSS JOIN Files AS F
+        ///FROM Files AS F
+        ///LEFT JOIN Users AS U ON U.Id = @UserId
         ///LEFT JOIN DiscretionaryAccessMatrix AS M ON M.UserId = U.Id AND M.FileId = F.Id
         ///LEFT JOIN ActionTypes AS AT ON AT.Id = M.ActionTypeId
         ///WHERE U.Id = @UserId.

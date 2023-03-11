@@ -52,7 +52,23 @@ public class UserMainPageViewModel : ObservableRecipient
 
     public async Task PageLoaded()
     {
-        var files = await AppDataService.GetUserFiles(CurrentUser);
-        files.ForEach(file => UserFiles.Add(file));
+        var currentFiles = await AppDataService.GetUserFiles(CurrentUser);
+        var currentFilesIds = currentFiles.Select(file => file.Id);
+        currentFiles.ForEach(file => UserFiles.Add(file));
+        if (CurrentUser != null && CurrentUser.AccessControlModelId == AccessControlModel.DiscretionaryAccessControl)
+        {
+            var updateFilesTimer = new DispatcherTimer();
+            updateFilesTimer.Interval = TimeSpan.FromSeconds(5);
+            updateFilesTimer.Tick += async (sender, args) =>
+            {
+                var files = await AppDataService.GetUserFiles(CurrentUser);
+                var newFiles = files.Where(x => !currentFilesIds.Contains(x.Id)).ToList();
+                newFiles.ForEach(file => UserFiles.Add(file));
+                var removedFilesIds = currentFilesIds.Where(x => !files.Select(z => z.Id).Contains(x)).ToList();
+                UserFiles.Where(x => removedFilesIds.Contains(x.Id)).ToList().ForEach(x => UserFiles.Remove(x));
+                currentFilesIds = UserFiles.Select(x => x.Id);
+            };
+            updateFilesTimer.Start();
+        }
     }
 }

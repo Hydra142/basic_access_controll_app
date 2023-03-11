@@ -23,8 +23,8 @@ namespace SafeMessenge.ViewModels
         public NavigationService NavigationService { get; set; }
         public AppDataService AppDataService { get; set; }
         public readonly AdminSection[] AdminSections =(AdminSection[]) Enum.GetValues(typeof(AdminSection));
-        public readonly AccessControlModelName[] AccessControlModels = 
-            (AccessControlModelName[]) Enum.GetValues(typeof(AccessControlModelName));
+        public readonly AccessControlModel[] AccessControlModels = 
+            (AccessControlModel[]) Enum.GetValues(typeof(AccessControlModel));
         private User _currentUser = new();
         public User CurrentUser
         {
@@ -183,6 +183,7 @@ namespace SafeMessenge.ViewModels
             if (SelectedFile != null)
             {
                 var file = await AppDataService.InsertOrUpdateFile(SelectedFile);
+                await LoadUserDiscretionaryMatrix();
             }
         }
 

@@ -97,7 +97,13 @@ public class AppDataService
         {
             return result;
         }
-        return (await _sqliteConnector.Read<File>(Resources.GetUserFilesByUserId, new { UserId = user.Id })).ToList();
+        var sql = user.AccessControlModelId switch
+        {
+            AccessControlModel.MandatoryAccessControl => Resources.GetUserFilesByUserId,
+            AccessControlModel.DiscretionaryAccessControl => Resources.GetDiscretionaryAccessModelUserAvailableFilesById,
+            _ => Resources.GetUserFilesByUserId,
+        };
+        return (await _sqliteConnector.Read<File>(sql, new { UserId = user.Id })).ToList();
     }
     public async Task<List<File>> LoadFiles()
     {

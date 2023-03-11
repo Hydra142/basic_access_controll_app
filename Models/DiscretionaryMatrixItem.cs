@@ -9,6 +9,7 @@ namespace SafeMessenge.Models;
 [ObservableObject]
 public partial class DiscretionaryMatrixItem
 {
+    //db fields
     public int? Id;
     public int? UserId;
     public int? FileId;
@@ -17,8 +18,9 @@ public partial class DiscretionaryMatrixItem
     public DateTime? _AllowFrom = new();
     [ObservableProperty]
     public DateTime? _AllowTo = new();
-    public bool IsActive;
 
+    //additional fields
+    public bool IsActive;
     public string FileName;
     public List<ActionType> ActionTypesOptions = new();
 
