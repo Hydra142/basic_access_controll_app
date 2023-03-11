@@ -4,5 +4,6 @@
 [IsAdmin] = @IsAdmin,
 [PasswordTypeId] = @PasswordTypeId,
 [ClearanceId] = @ClearanceId,
-[ActionTypeId] = @ActionTypeId
+[ActionTypeId] = @ActionTypeId,
+[AccessControlModelId] = @AccessControlModelId
 WHERE [Id] = @Id;

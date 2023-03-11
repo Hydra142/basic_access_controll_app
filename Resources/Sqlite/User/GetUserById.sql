@@ -5,6 +5,7 @@
     Users.IsAdmin AS [IsAdmin],
     Users.ClearanceId AS [ClearanceId],
     Users.ActionTypeId AS [ActionTypeId],
+    Users.AccessControlModelId AS [AccessControlModelId],
     PaswordTypes.Id AS [PasswordTypeId],
     PaswordTypes.Name AS [PasswordTypeName],
     PaswordTypes.ValidationRegex AS [PasswordValidationRegex],

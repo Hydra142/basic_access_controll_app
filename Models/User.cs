@@ -19,10 +19,11 @@ public partial class User
     public string PasswordTypeDescription;
     public int ClearanceId;
     public int ActionTypeId;
+    public AccessControlModelName AccessControlModelId;
     public string Avatar => $"https://dummyimage.com/400x400/000000/0011ff&text={(Password.IsNullOrEmpty() ? "Новий" : _Name)}";
 
     public object ToObject()
     {
-        return new { Id = Id, UserName = _Name, Password = Password, IsAdmin = IsAdmin, PasswordTypeId = PasswordTypeId, ClearanceId = ClearanceId, ActionTypeId = ActionTypeId };
+        return new { Id = Id, UserName = _Name, Password = Password, IsAdmin = IsAdmin, PasswordTypeId = PasswordTypeId, ClearanceId = ClearanceId, ActionTypeId = ActionTypeId, AccessControlModelId = (int)AccessControlModelId };
     }
 }

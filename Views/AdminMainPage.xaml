@@ -8,7 +8,7 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
     <Page.Resources>
-        <helpers:AdminSectionEnumToStringConverter x:Key="AdminSectionEnumToStringConverter"/>
+        <helpers:EnumToStringConverter x:Key="EnumToStringConverter"/>
         <helpers:ArrayToVisibilityConverter x:Key="ArrayToVisibilityConverter"/>
         <helpers:ObjectToVisibilityConverter x:Key="ObjectToVisibilityConverter"/>
         <!--<SolidColorBrush x:Key="ListViewItemSelectionIndicatorBrush" Color="#ffd149" />
@@ -140,7 +140,7 @@
                 </GridView.ItemsPanel>
                 <GridView.ItemTemplate>
                     <DataTemplate>
-                        <TextBlock Padding="10 0" Text="{Binding Converter={StaticResource AdminSectionEnumToStringConverter}}"/>
+                        <TextBlock Padding="10 0" Text="{Binding Converter={StaticResource EnumToStringConverter}}"/>
                     </DataTemplate>
                 </GridView.ItemTemplate>
             </GridView>
@@ -193,8 +193,10 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
-                <Grid Width="400" HorizontalAlignment="Left" Padding="10" RowSpacing="10">
+                <Grid Width="500" HorizontalAlignment="Left" Padding="10" RowSpacing="10">
                     <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
                         <RowDefinition/>
                         <RowDefinition/>
                         <RowDefinition/>
@@ -207,32 +209,54 @@
                         <ColumnDefinition/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Імя:" VerticalAlignment="Center" FontSize="18" FontWeight="Normal" Foreground="Black"/>
-                    <TextBox Grid.Row="0" Grid.Column="1" Text="{x:Bind ViewModel.SelectedUser.Name, Mode=TwoWay}"/>
-                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Пароль:" VerticalAlignment="Center" FontSize="18" FontWeight="Normal" Foreground="Black"/>
-                    <TextBox Grid.Row="1" Grid.Column="1" Text="{x:Bind ViewModel.SelectedUser.Password, Mode=TwoWay}"/>
-                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Тип паролю:" VerticalAlignment="Center" FontSize="18" FontWeight="Normal" Foreground="Black"/>
-                    <usercontrols:CustomComboBox
-                        Grid.Row="2"
-                        Grid.Column="1"
-                        DisplayMemberPath="Value"
-                        ItemsSource="{x:Bind ViewModel.PasswordTypeOptions, Mode=OneWay}"
-                        SelectedItem="{x:Bind ViewModel.SelectedPasswordTypeOption, Mode=TwoWay}"/>
-                    <TextBlock Grid.Row="3" Grid.Column="0" Text="Рівень доступу:" VerticalAlignment="Center" FontSize="18" FontWeight="Normal" Foreground="Black"/>
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Модель розмежування" VerticalAlignment="Center" FontSize="18" FontWeight="Normal" Foreground="Black"/>
+                    <GridView
+                        Grid.Row="0" Grid.Column="1"
+                        ItemsSource="{x:Bind ViewModel.AccessControlModels, Mode=OneWay}"
+                        SelectedItem="{x:Bind ViewModel.SelectedUser.AccessControlModelId, Mode=TwoWay}">
+                        <GridView.Resources>
+                            <SolidColorBrush x:Key="GridViewItemBackgroundSelectedPointerOver" Color="#c66900" />
+                            <SolidColorBrush x:Key="GridViewItemBackgroundSelected" Color="#c66900" />
+                            <SolidColorBrush x:Key="GridViewItemForeground" Color="White" />
+                            <SolidColorBrush x:Key="GridViewItemForegroundSelected" Color="Black" />
+                        </GridView.Resources>
+                        <GridView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <ItemsWrapGrid Orientation="Vertical" MaximumRowsOrColumns="1"/>
+                            </ItemsPanelTemplate>
+                        </GridView.ItemsPanel>
+                        <GridView.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Width="110" Padding="0" TextAlignment="Center" Text="{Binding Converter={StaticResource EnumToStringConverter}}"/>
+                            </DataTemplate>
+                        </GridView.ItemTemplate>
+                    </GridView>
+                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Імя:" VerticalAlignment="Center" FontSize="18" FontWeight="Normal" Foreground="Black"/>
+                    <TextBox Grid.Row="1" Grid.Column="1" Text="{x:Bind ViewModel.SelectedUser.Name, Mode=TwoWay}"/>
+                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Пароль:" VerticalAlignment="Center" FontSize="18" FontWeight="Normal" Foreground="Black"/>
+                    <TextBox Grid.Row="2" Grid.Column="1" Text="{x:Bind ViewModel.SelectedUser.Password, Mode=TwoWay}"/>
+                    <TextBlock Grid.Row="3" Grid.Column="0" Text="Тип паролю:" VerticalAlignment="Center" FontSize="18" FontWeight="Normal" Foreground="Black"/>
                     <usercontrols:CustomComboBox
                         Grid.Row="3"
                         Grid.Column="1"
                         DisplayMemberPath="Value"
-                        ItemsSource="{x:Bind ViewModel.SecurityClearanceOptions, Mode=OneWay}"
-                        SelectedItem="{x:Bind ViewModel.SelectedSecurityClearanceOption, Mode=TwoWay}"/>
-                    <TextBlock Grid.Row="4" Grid.Column="0" Text="Дозволені дії:" VerticalAlignment="Center" FontSize="18" FontWeight="Normal" Foreground="Black"/>
+                        ItemsSource="{x:Bind ViewModel.PasswordTypeOptions, Mode=OneWay}"
+                        SelectedItem="{x:Bind ViewModel.SelectedPasswordTypeOption, Mode=TwoWay}"/>
+                    <TextBlock Grid.Row="4" Grid.Column="0" Text="Рівень доступу:" VerticalAlignment="Center" FontSize="18" FontWeight="Normal" Foreground="Black"/>
                     <usercontrols:CustomComboBox
                         Grid.Row="4"
                         Grid.Column="1"
                         DisplayMemberPath="Value"
+                        ItemsSource="{x:Bind ViewModel.SecurityClearanceOptions, Mode=OneWay}"
+                        SelectedItem="{x:Bind ViewModel.SelectedSecurityClearanceOption, Mode=TwoWay}"/>
+                    <TextBlock Grid.Row="5" Grid.Column="0" Text="Дозволені дії:" VerticalAlignment="Center" FontSize="18" FontWeight="Normal" Foreground="Black"/>
+                    <usercontrols:CustomComboBox
+                        Grid.Row="5"
+                        Grid.Column="1"
+                        DisplayMemberPath="Value"
                         ItemsSource="{x:Bind ViewModel.ActionTypeOptions, Mode=OneWay}"
                         SelectedItem="{x:Bind ViewModel.SelectedActionTypeOption, Mode=TwoWay}"/>
-                    <Button Grid.Row="5" Grid.Column="1" Content="Зберегти" HorizontalAlignment="Right" Background="red" Click="{x:Bind ViewModel.SaveUserData}"/>
+                    <Button Grid.Row="6" Grid.Column="1" Content="Зберегти" HorizontalAlignment="Right" Background="red" Click="{x:Bind ViewModel.SaveUserData}"/>
                 </Grid>
             </Grid>
         </Grid>

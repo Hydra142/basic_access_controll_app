@@ -10,11 +10,11 @@ using System.Threading.Tasks;
 
 namespace SafeMessenge.Helpers;
 
-internal class AdminSectionEnumToStringConverter : IValueConverter
+internal class EnumToStringConverter : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, string language)
     {
-        if (value is AdminSection enumValue)
+        if (value is Enum enumValue)
         {
             DisplayAttribute displayAttribute = enumValue.GetType()
             .GetMember(value.ToString())

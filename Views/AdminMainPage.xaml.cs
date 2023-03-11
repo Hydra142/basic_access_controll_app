@@ -34,6 +34,7 @@ namespace SafeMessenge.Views
         public AdminMainPage()
         {
             ViewModel = App.GetService<AdminMainPageViewModel>();
+            //myItemsRepeater.DataContext = ViewModel;
             this.InitializeComponent();
         }
 
@@ -110,5 +111,7 @@ namespace SafeMessenge.Views
                 }
             }
         }
+
+
     }
 }

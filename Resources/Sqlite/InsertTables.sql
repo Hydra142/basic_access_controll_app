@@ -47,6 +47,7 @@ CREATE TABLE IF NOT EXISTS [Users] (
 , [Created] DATETIME default current_timestamp
 , ClearanceId INTEGER NOT NULL default 1
 , ActionTypeId INTEGER NOT NULL default 1
+, AccessControlModelId INTEGER NOT NULL default 0
 , FOREIGN KEY ([ActionTypeId]) REFERENCES ActionTypes(Id)
 , FOREIGN KEY ([PasswordTypeId]) REFERENCES PaswordTypes(Id)
 , FOREIGN KEY (ClearanceId) REFERENCES SecurityClearances (Id)
@@ -75,5 +76,19 @@ INSERT INTO Files ([Id],[Name],[FilePath],[MinimumClearanceId], [FileType]) VALU
 (3, 'ТаємнийФайл','D:\LabsData\TBD\TBD_Redchych\Data\TextFile3.txt', 3, 0),
 (4, 'Таємниа картинка','D:\LabsData\TBD\TBD_Redchych\Data\ImgFile.png', 3, 1),
 (5, 'Таємний .exe','D:\LabsData\TBD\TBD_Redchych\Data\secret_executable_file.exe', 3, 2);
+
+DROP TABLE IF EXISTS [DiscretionaryAccessMatrix];
+CREATE TABLE DiscretionaryAccessMatrix (
+  Id INTEGER PRIMARY KEY AUTOINCREMENT,
+  UserId INTEGER NOT NULL,
+  FileId INTEGER NOT NULL,
+  ActionTypeId INTEGER NOT NULL,
+  AllowFrom DATETIME default NULL,
+  AllowTo DATETIME default NULL,
+  FOREIGN KEY (UserId) REFERENCES Users (Id),
+  FOREIGN KEY (FileId) REFERENCES Files (Id),
+  FOREIGN KEY (ActionTypeId) REFERENCES ActionTypes (Id)
+);
+CREATE UNIQUE INDEX [DiscretionaryAccessMatrix_UI] on [DiscretionaryAccessMatrix] (UserId, FileId);
 
 
