@@ -14,9 +14,9 @@ public partial class DiscretionaryMatrixItem
     public int? FileId;
     public int? ActionTypeId;
     [ObservableProperty]
-    public TimeSpan? _AllowFrom = new();
+    public DateTime? _AllowFrom = new();
     [ObservableProperty]
-    public TimeSpan? _AllowTo = new();
+    public DateTime? _AllowTo = new();
     public bool IsActive;
 
     public string FileName;

@@ -8,7 +8,7 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
     <Page.Resources>
-        <helpers:TimeSpanToStringConverter x:Key="TimeSpanToStringConverter"/>
+        <helpers:DateTimeToStringConverter  x:Key="DateTimeToStringConverter"/>
         <helpers:EnumToStringConverter x:Key="EnumToStringConverter"/>
         <helpers:ArrayToVisibilityConverter x:Key="ArrayToVisibilityConverter"/>
         <helpers:ObjectToVisibilityConverter x:Key="ObjectToVisibilityConverter"/>
@@ -136,11 +136,11 @@
                     />
                 <StackPanel Grid.Column="2" Orientation="Horizontal">
                     <TextBlock Text="З:" VerticalAlignment="Center" Foreground="Black"/>
-                    <TextBox Grid.Column="2" TextAlignment="Center" Text="{x:Bind AllowFrom, Converter={StaticResource TimeSpanToStringConverter}, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
+                    <TextBox Grid.Column="2" TextAlignment="Center" Text="{x:Bind AllowFrom, Converter={StaticResource DateTimeToStringConverter }, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
                 </StackPanel>
                 <StackPanel Grid.Column="3" Orientation="Horizontal">
                     <TextBlock Text="До:" VerticalAlignment="Center" Foreground="Black"/>
-                    <TextBox Grid.Column="2" TextAlignment="Center" Text="{x:Bind AllowTo, Converter={StaticResource TimeSpanToStringConverter}, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
+                    <TextBox Grid.Column="2" TextAlignment="Center" Text="{x:Bind AllowTo, Converter={StaticResource DateTimeToStringConverter }, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
                 </StackPanel>
                 
             </Grid>

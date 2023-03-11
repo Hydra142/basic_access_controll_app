@@ -83,8 +83,8 @@ CREATE TABLE DiscretionaryAccessMatrix (
   UserId INTEGER NOT NULL,
   FileId INTEGER NOT NULL,
   ActionTypeId INTEGER NOT NULL,
-  AllowFrom TEXT default NULL,
-  AllowTo TEXT default NULL,
+  AllowFrom DATETIME default NULL,
+  AllowTo DATETIME default NULL,
   FOREIGN KEY (UserId) REFERENCES Users (Id),
   FOREIGN KEY (FileId) REFERENCES Files (Id),
   FOREIGN KEY (ActionTypeId) REFERENCES ActionTypes (Id)
