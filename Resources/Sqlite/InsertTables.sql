@@ -69,13 +69,13 @@ CREATE TABLE Files (
   FileType INTEGER NOT NULL default 0,
   MinimumClearanceId INTEGER NOT NULL,
   FOREIGN KEY (MinimumClearanceId) REFERENCES SecurityClearances (Id)
-);
+);/*
 INSERT INTO Files ([Id],[Name],[FilePath],[MinimumClearanceId], [FileType]) VALUES
 (1, 'ЗвичайнийФайл','D:\LabsData\TBD\TBD_Redchych\Data\TextFile1.txt', 1, 0),
 (2, 'СлужбовийФайл','D:\LabsData\TBD\TBD_Redchych\Data\TextFile2.txt', 2, 0),
 (3, 'ТаємнийФайл','D:\LabsData\TBD\TBD_Redchych\Data\TextFile3.txt', 3, 0),
 (4, 'Таємниа картинка','D:\LabsData\TBD\TBD_Redchych\Data\ImgFile.png', 3, 1),
-(5, 'Таємний .exe','D:\LabsData\TBD\TBD_Redchych\Data\secret_executable_file.exe', 3, 2);
+(5, 'Таємний .exe','D:\LabsData\TBD\TBD_Redchych\Data\secret_executable_file.exe', 3, 2);*/
 
 DROP TABLE IF EXISTS [DiscretionaryAccessMatrix];
 CREATE TABLE DiscretionaryAccessMatrix (
@@ -90,7 +90,3 @@ CREATE TABLE DiscretionaryAccessMatrix (
   FOREIGN KEY (ActionTypeId) REFERENCES ActionTypes (Id)
 );
 CREATE UNIQUE INDEX [DiscretionaryAccessMatrix_UI] on [DiscretionaryAccessMatrix] (UserId, FileId);
-INSERT INTO DiscretionaryAccessMatrix (UserId, FileId, ActionTypeId) VALUES
-(2, 1, 1),
-(2, 2, 2),
-(3, 1, 3);

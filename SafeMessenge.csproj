@@ -154,7 +154,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Releases\" />
     <Folder Include="Resources\Sqlite\ActionType\" />
   </ItemGroup>
   <Target Name="PostPublish" AfterTargets="Publish">
