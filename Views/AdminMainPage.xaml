@@ -8,6 +8,7 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
     <Page.Resources>
+        <helpers:TimeSpanToStringConverter x:Key="TimeSpanToStringConverter"/>
         <helpers:EnumToStringConverter x:Key="EnumToStringConverter"/>
         <helpers:ArrayToVisibilityConverter x:Key="ArrayToVisibilityConverter"/>
         <helpers:ObjectToVisibilityConverter x:Key="ObjectToVisibilityConverter"/>
@@ -114,6 +115,36 @@
                 </Grid>
             </GridViewItem>
         </DataTemplate>
+        <DataTemplate x:DataType="models:DiscretionaryMatrixItem" x:Key="DiscretionaryMatrixItemTemplate">
+            <Grid ColumnSpacing="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="200"/>
+                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <CheckBox Content="{x:Bind FileName, Mode=OneWay}" IsChecked="{x:Bind IsActive, Mode=TwoWay}" Foreground="Black"/>
+                <ComboBox
+                    Grid.Column="1"
+                    BorderBrush="Gray"
+                    BorderThickness="1"
+                    HorizontalAlignment="Stretch"
+                    ItemsSource="{x:Bind ActionTypesOptions, Mode=OneWay}"
+                    SelectedValuePath="Id"
+                    DisplayMemberPath="Name"
+                    SelectedValue="{x:Bind ActionTypeId, Mode=TwoWay}"
+                    />
+                <StackPanel Grid.Column="2" Orientation="Horizontal">
+                    <TextBlock Text="З:" VerticalAlignment="Center" Foreground="Black"/>
+                    <TextBox Grid.Column="2" TextAlignment="Center" Text="{x:Bind AllowFrom, Converter={StaticResource TimeSpanToStringConverter}, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
+                </StackPanel>
+                <StackPanel Grid.Column="3" Orientation="Horizontal">
+                    <TextBlock Text="До:" VerticalAlignment="Center" Foreground="Black"/>
+                    <TextBox Grid.Column="2" TextAlignment="Center" Text="{x:Bind AllowTo, Converter={StaticResource TimeSpanToStringConverter}, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
+                </StackPanel>
+                
+            </Grid>
+        </DataTemplate>
     </Page.Resources>
     <Grid x:Name="MainGrid">
         <Grid.RowDefinitions>
@@ -188,11 +219,15 @@
                     </GridView.ItemsPanel>
                 </GridView>
             </StackPanel>
-            <Grid Grid.Column="1">
+            <Grid Grid.Column="1" ColumnSpacing="10">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
                 <Grid Width="500" HorizontalAlignment="Left" Padding="10" RowSpacing="10">
                     <Grid.RowDefinitions>
                         <RowDefinition/>
@@ -201,9 +236,7 @@
                         <RowDefinition/>
                         <RowDefinition/>
                         <RowDefinition/>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                        <RowDefinition/>
+                        <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
@@ -256,7 +289,24 @@
                         DisplayMemberPath="Value"
                         ItemsSource="{x:Bind ViewModel.ActionTypeOptions, Mode=OneWay}"
                         SelectedItem="{x:Bind ViewModel.SelectedActionTypeOption, Mode=TwoWay}"/>
-                    <Button Grid.Row="6" Grid.Column="1" Content="Зберегти" HorizontalAlignment="Right" Background="red" Click="{x:Bind ViewModel.SaveUserData}"/>
+                    <Button Grid.Row="6" Grid.Column="1" Content="Зберегти" HorizontalAlignment="Right" VerticalAlignment="Bottom" Background="red" Click="{x:Bind ViewModel.SaveUserData}"/>
+                </Grid>
+                <Grid Grid.Row="0" Grid.Column="1" Padding="10" RowSpacing="10" BorderBrush="Black" BorderThickness="2 5 0 0" Background="#f57c00">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Text="Контроль ресурсів" HorizontalAlignment="Center" FontSize="20" FontWeight="Medium"  Foreground="Black"/>
+                    <ListView
+                            Grid.Row="1"
+                            ItemsSource="{x:Bind ViewModel.CurrentUserDiscretionaryMatrix, Mode=TwoWay}"
+                            ItemTemplate="{StaticResource DiscretionaryMatrixItemTemplate}"
+                            ScrollViewer.VerticalScrollMode="Disabled"
+                            ScrollViewer.IsVerticalScrollChainingEnabled="False"
+                            SelectionMode="None">
+                    </ListView>
+                    <Button Grid.Row="2" Content="Зберегти" Click="{x:Bind ViewModel.SaveUserDiscretionaryAccessMatrix}" Background="Red" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
                 </Grid>
             </Grid>
         </Grid>

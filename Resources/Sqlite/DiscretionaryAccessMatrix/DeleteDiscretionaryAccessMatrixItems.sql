@@ -1,0 +1,1 @@
+﻿DELETE FROM DiscretionaryAccessMatrix WHERE Id IN @Ids

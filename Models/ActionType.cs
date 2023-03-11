@@ -1,16 +1,19 @@
-﻿using System;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace SafeMessenge.Models;
-
-public class ActionType
+[ObservableObject]
+public partial class ActionType
 {
-    public int Id;
+    [ObservableProperty]
+    public int _Id;
     public bool IsReadAble;
     public bool IsWriteAble;
     public bool IsExecuteAble;
-    public string Name;
+    [ObservableProperty]
+    public string _Name;
 }

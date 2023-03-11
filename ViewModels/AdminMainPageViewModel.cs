@@ -75,12 +75,14 @@ namespace SafeMessenge.ViewModels
             }
         }
         public ObservableCollection<User> Users = new();
+        public ObservableCollection<DiscretionaryMatrixItem> CurrentUserDiscretionaryMatrix = new();
         private User? _selectedUser;
         public User? SelectedUser
         {
             get => _selectedUser;
             set
             {
+                var oldSelectionId = _selectedUser?.Id;
                 SetProperty(ref _selectedUser, value);
                 if (value != null)
                 {
@@ -88,6 +90,10 @@ namespace SafeMessenge.ViewModels
                     SelectedActionTypeOption = ComboBoxOptionHelper.GetOptionByKey(value.ActionTypeId.ToString(), ActionTypeOptions);
                     SelectedPasswordTypeOption = ComboBoxOptionHelper.GetOptionByKey(value.PasswordTypeId.ToString(), PasswordTypeOptions);
                     SelectedSecurityClearanceOption = ComboBoxOptionHelper.GetOptionByKey(value.ClearanceId.ToString(), SecurityClearanceOptions);
+                    if (value.Id != oldSelectionId)
+                    {
+                        _ = LoadUserDiscretionaryMatrix();
+                    }
                 }
             }
         }
@@ -151,6 +157,19 @@ namespace SafeMessenge.ViewModels
             AppDataService.Files.ForEach(file => Files.Add(file));
             AppDataService.Users.Where(x => !x.IsAdmin).ToList().ForEach(user => Users.Add(user));
         }
+        public async Task LoadUserDiscretionaryMatrix()
+        {
+            if (SelectedUser != null)
+            {
+                CurrentUserDiscretionaryMatrix.Clear();
+                foreach (var item in await AppDataService.GetUserDiscretionaryAccessMatrixById(SelectedUser.Id))
+                {
+                    item.ActionTypesOptions = AppDataService.ActionTypes;
+                    CurrentUserDiscretionaryMatrix.Add(item);
+                }
+            }
+            
+        }
 
         public async void SaveUserData()
         {
@@ -171,6 +190,18 @@ namespace SafeMessenge.ViewModels
         {
             Files.Insert(0, new File() { Name = "Новий файл", MinimumClearanceId = AppDataService.SecurityClearances.First().Id });
             SelectedFile = Files[0];
+        }
+
+        public async Task SaveUserDiscretionaryAccessMatrix()
+        {
+            if (SelectedUser != null)
+            {
+                var matrix = CurrentUserDiscretionaryMatrix.Where(x => x.IsActive).ToList();
+                await AppDataService.InsertOrUpdateDiscretionaryAccessMatrixItems(matrix);
+                var deleteList = CurrentUserDiscretionaryMatrix.Where(x => !x.IsActive && x.Id != null).Select(x => x.Id.Value);
+                await AppDataService.DeleteDiscretionaryAccessMatrixItems(deleteList);
+                await LoadUserDiscretionaryMatrix();
+            }
         }
     }
     public enum AdminSection

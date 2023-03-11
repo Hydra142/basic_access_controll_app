@@ -113,4 +113,23 @@ public class AppDataService
         }
         return null;
     }
+
+    public async Task<List<DiscretionaryMatrixItem>> GetUserDiscretionaryAccessMatrixById(long id)
+    {
+        return (await _sqliteConnector.Read<DiscretionaryMatrixItem>(Resources.GetUserDiscretionaryAccessMatrixById, new { UserId = id })).ToList();
+    }
+
+    public async Task InsertOrUpdateDiscretionaryAccessMatrixItems(List<DiscretionaryMatrixItem> items)
+    {
+        foreach (var item in items)
+        {
+            await _sqliteConnector.Write(Resources.InsertOrUpdateDiscretionaryAccessMatrixItem, item.ToObject());
+        }
+    }
+
+    public async Task DeleteDiscretionaryAccessMatrixItems(IEnumerable<int> ids)
+    {
+        if (!ids.Any()) return;
+        await _sqliteConnector.Write(Resources.DeleteDiscretionaryAccessMatrixItems, new { Ids = ids.ToArray() });
+    }
 }

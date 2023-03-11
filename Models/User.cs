@@ -2,6 +2,7 @@
 using Microsoft.IdentityModel.Tokens;
 using System.Text.RegularExpressions;
 using CommunityToolkit.Mvvm.ComponentModel;
+using System.Collections.ObjectModel;
 
 namespace SafeMessenge.Models;
 
@@ -20,6 +21,7 @@ public partial class User
     public int ClearanceId;
     public int ActionTypeId;
     public AccessControlModelName AccessControlModelId;
+
     public string Avatar => $"https://dummyimage.com/400x400/000000/0011ff&text={(Password.IsNullOrEmpty() ? "Новий" : _Name)}";
 
     public object ToObject()

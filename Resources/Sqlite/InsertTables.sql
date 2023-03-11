@@ -83,12 +83,14 @@ CREATE TABLE DiscretionaryAccessMatrix (
   UserId INTEGER NOT NULL,
   FileId INTEGER NOT NULL,
   ActionTypeId INTEGER NOT NULL,
-  AllowFrom DATETIME default NULL,
-  AllowTo DATETIME default NULL,
+  AllowFrom TEXT default NULL,
+  AllowTo TEXT default NULL,
   FOREIGN KEY (UserId) REFERENCES Users (Id),
   FOREIGN KEY (FileId) REFERENCES Files (Id),
   FOREIGN KEY (ActionTypeId) REFERENCES ActionTypes (Id)
 );
 CREATE UNIQUE INDEX [DiscretionaryAccessMatrix_UI] on [DiscretionaryAccessMatrix] (UserId, FileId);
-
-
+INSERT INTO DiscretionaryAccessMatrix (UserId, FileId, ActionTypeId) VALUES
+(2, 1, 1),
+(2, 2, 2),
+(3, 1, 3);

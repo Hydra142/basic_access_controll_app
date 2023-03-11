@@ -61,6 +61,15 @@ namespace SafeMessenge.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to DELETE DiscretionaryAccessMatrix WHERE Id IN (@Ids).
+        /// </summary>
+        internal static string DeleteDiscretionaryAccessMatrixItems {
+            get {
+                return ResourceManager.GetString("DeleteDiscretionaryAccessMatrixItems", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to SELECT Id, IsReadAble, IsWriteAble, IsExecuteAble, Name FROM ActionTypes.
         /// </summary>
         internal static string GetActionTypes {
@@ -92,12 +101,13 @@ namespace SafeMessenge.Properties {
         ///    Users.IsAdmin AS [IsAdmin],
         ///    Users.ClearanceId AS [ClearanceId],
         ///    Users.ActionTypeId AS [ActionTypeId],
+        ///    Users.AccessControlModelId AS [AccessControlModelId],
         ///    PaswordTypes.Id AS [PasswordTypeId],
         ///    PaswordTypes.Name AS [PasswordTypeName],
         ///    PaswordTypes.ValidationRegex AS [PasswordValidationRegex],
         ///    PaswordTypes.Description AS [PasswordTypeDescription]
         ///FROM Users
-        ///LEFT JOIN PaswordTypes ON PaswordTypes.Id = PasswordTypeId.
+        ///LEFT JOIN Paswor [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string GetAllUsers {
             get {
@@ -135,13 +145,13 @@ namespace SafeMessenge.Properties {
         ///    Users.IsAdmin AS [IsAdmin],
         ///    Users.ClearanceId AS [ClearanceId],
         ///    Users.ActionTypeId AS [ActionTypeId],
+        ///    Users.AccessControlModelId AS [AccessControlModelId],
         ///    PaswordTypes.Id AS [PasswordTypeId],
         ///    PaswordTypes.Name AS [PasswordTypeName],
         ///    PaswordTypes.ValidationRegex AS [PasswordValidationRegex],
         ///    PaswordTypes.Description AS [PasswordTypeDescription]
         ///FROM Users
-        ///LEFT JOIN PaswordTypes ON PaswordTypes.Id = PasswordTypeId
-        ///WHERE Users.Id  [rest of string was truncated]&quot;;.
+        ///LEFT JOIN Paswor [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string GetUserById {
             get {
@@ -151,20 +161,42 @@ namespace SafeMessenge.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to SELECT
+        ///	M.Id AS Id,
+        ///	U.Id AS UserId,
+        ///	F.Id AS FileId,
+        ///	F.Name AS FileName,
+        ///	IFNULL(AT.Id, 1) AS ActionTypeId,
+        ///	M.AllowFrom AS AllowFrom,
+        ///	M.AllowTo AS AllowTo,
+        ///	M.Id AS IsActive
+        ///FROM Users AS U
+        ///CROSS JOIN Files AS F
+        ///LEFT JOIN DiscretionaryAccessMatrix AS M ON M.UserId = U.Id AND M.FileId = F.Id
+        ///LEFT JOIN ActionTypes AS AT ON AT.Id = M.ActionTypeId
+        ///WHERE U.Id = @UserId.
+        /// </summary>
+        internal static string GetUserDiscretionaryAccessMatrixById {
+            get {
+                return ResourceManager.GetString("GetUserDiscretionaryAccessMatrixById", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SELECT
         ///    F.Id AS Id,
-        ///    F.Name AS Name,
+        ///    F.Name AS Name, /*Назва файлу*/
         ///    F.FilePath AS FilePath,
         ///    F.FileType AS FileType,
-        ///    SC.Name AS ClearanceName,
+        ///    SC.Name AS ClearanceName,/*Назва рівня доступу*/
         ///    AT.Name AS ActionTypeName,
-        ///    AT.IsReadAble AS IsReadAble,
+        ///    AT.IsReadAble AS IsReadAble, /*дозволені дії*/
         ///    AT.IsWriteAble AS IsWriteAble,
         ///    AT.IsExecuteAble AS IsExecuteAble
+        ////*Вибір всіх файлів з таблиці*/
         ///FROM Files F
+        ////*Створюємо всі можливі комбідації файл - користувач*/
         ///CROSS JOIN Users AS U
-        ///LEFT JOIN SecurityClearances AS SC ON SC.Id = F.MinimumClearanceId
-        ///LEFT JOIN ActionTypes AS AT ON AT.Id = U.ActionTypeId
-        ///WHERE U.Id = @UserId AND ((F.FileType IN(0, 1) AND (AT.IsReadAble OR AT.IsWr [rest of string was truncated]&quot;;.
+        ////*приєднуємо відповідний рівень доступу цього файлу*/ [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string GetUserFilesByUserId {
             get {
@@ -173,8 +205,26 @@ namespace SafeMessenge.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to INSERT OR REPLACE INTO table_name (Id, Name, FilePath, FileType, MinimumClearanceId)
-        ///VALUES (@Id, @Name, @FilePath, @FileType, @MinimumClearanceId)
+        ///   Looks up a localized string similar to INSERT OR REPLACE INTO DiscretionaryAccessMatrix (Id, UserId, FileId, ActionTypeId, AllowFrom, AllowTo)
+        ///VALUES (@Id, @UserId, @FileId, @ActionTypeId, @AllowFrom, @AllowTo);
+        ///.
+        /// </summary>
+        internal static string InsertOrUpdateDiscretionaryAccessMatrixItem {
+            get {
+                return ResourceManager.GetString("InsertOrUpdateDiscretionaryAccessMatrixItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to INSERT OR REPLACE INTO Files (Id, Name, FilePath, FileType, MinimumClearanceId)
+        ///VALUES (@Id, @Name, @FilePath, @FileType, @MinimumClearanceId);
+        ///SELECT
+        ///	Id,
+        ///	Name,
+        ///	FilePath,
+        ///	FileType,
+        ///	MinimumClearanceId
+        ///FROM Files WHERE Id = last_insert_rowid();
         ////*ON DUPLICATE KEY UPDATE Name = @Name, FilePath = @FilePath, FileType = @FileType, MinimumClearanceId =@MinimumClearanceId*/.
         /// </summary>
         internal static string InsertOrUpdateFile {
@@ -211,11 +261,11 @@ namespace SafeMessenge.Properties {
         ///    Users.Password AS [Password],
         ///    Users.IsAdmin AS [IsAdmin],
         ///    Users.ClearanceId AS [ClearanceId],
+        ///    Users.AccessControlModelId AS [AccessControlModelId],
         ///    PaswordTypes.Id AS [PasswordTypeId],
         ///    PaswordTypes.Name AS [PasswordTypeName],
         ///    PaswordTypes.ValidationRegex AS [PasswordValidationRegex],
-        ///    PaswordTypes.Description AS [PasswordTypeDescription]
-        ///FROM  [rest of string was truncated]&quot;;.
+        ///    P [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string InsertUser {
             get {
@@ -230,7 +280,8 @@ namespace SafeMessenge.Properties {
         ///[IsAdmin] = @IsAdmin,
         ///[PasswordTypeId] = @PasswordTypeId,
         ///[ClearanceId] = @ClearanceId,
-        ///[ActionTypeId] = @ActionTypeId
+        ///[ActionTypeId] = @ActionTypeId,
+        ///[AccessControlModelId] = @AccessControlModelId
         ///WHERE [Id] = @Id;
         ///.
         /// </summary>
