@@ -31,8 +31,8 @@ public partial class DiscretionaryMatrixItem
             UserId = UserId,
             FileId = FileId,
             ActionTypeId = ActionTypeId,
-            AllowFrom= AllowFrom != null ?  AllowFrom.Value.ToString() :null,
-            AllowTo = AllowTo != null ? AllowTo.Value.ToString() : null
+            AllowFrom= AllowFrom != null ?  AllowFrom.Value.ToString("yyyy-MM-dd HH:mm:ss") :null,
+            AllowTo = AllowTo != null ? AllowTo.Value.ToString("yyyy-MM-dd HH:mm:ss") : null
         };
     }
 }
