@@ -10,7 +10,7 @@
     DAM.AllowFrom AS AllowFrom,
     DAM.AllowTo AS AllowTo,
     CASE
-        WHEN (substr(AllowFrom, 12, 8) = '0:00:00' AND substr(AllowTo, 12, 8) = '0:00:00') THEN 'час не обмежений'
+        WHEN (substr(AllowFrom, 12, 8) = '00:00:00' AND substr(AllowTo, 12, 8) = '00:00:00') THEN 'час не обмежений'
         ELSE (substr(AllowFrom, 12, 5) || ' - ' || substr(AllowTo, 12, 5))
     END AS AvailabilityTimePeriod
 FROM DiscretionaryAccessMatrix DAM
@@ -26,5 +26,5 @@ WHERE
     )
     AND (
         time('now', 'localtime') BETWEEN substr(AllowFrom, 12, 8) AND substr(AllowTo, 12, 8)
-        OR (substr(AllowFrom, 12, 8) = '0:00:00' AND substr(AllowTo, 12, 8) = '0:00:00')
+        OR (substr(AllowFrom, 12, 8) = '00:00:00' AND substr(AllowTo, 12, 8) = '00:00:00')
     )

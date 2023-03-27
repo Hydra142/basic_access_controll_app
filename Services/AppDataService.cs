@@ -99,8 +99,13 @@ public class AppDataService
         }
         var sql = user.AccessControlModelId switch
         {
-            AccessControlModel.MandatoryAccessControl => Resources.GetUserFilesByUserId,
-            AccessControlModel.DiscretionaryAccessControl => Resources.GetDiscretionaryAccessModelUserAvailableFilesById,
+            //при мандатному розмежуванні
+            AccessControlModel.MandatoryAccessControl => 
+                Resources.GetUserFilesByUserId,
+            //при дискреційному
+            AccessControlModel.DiscretionaryAccessControl => 
+                Resources.GetDiscretionaryAccessModelUserAvailableFilesById,
+            //значення за замовчуванням (мандат)
             _ => Resources.GetUserFilesByUserId,
         };
         return (await _sqliteConnector.Read<File>(sql, new { UserId = user.Id })).ToList();

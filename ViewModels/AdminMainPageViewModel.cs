@@ -197,10 +197,17 @@ namespace SafeMessenge.ViewModels
         {
             if (SelectedUser != null)
             {
+                // дістаємо всі елемети матриці у якийх адміністатор активував чекбокс
                 var matrix = CurrentUserDiscretionaryMatrix.Where(x => x.IsActive).ToList();
+                //змінюємо поточні занчення або додаємо нові до БД
                 await AppDataService.InsertOrUpdateDiscretionaryAccessMatrixItems(matrix);
-                var deleteList = CurrentUserDiscretionaryMatrix.Where(x => !x.IsActive && x.Id != null).Select(x => x.Id.Value);
+                // дістаємо айді всіх елеметів які були декативоані адміністратором
+                var deleteList = CurrentUserDiscretionaryMatrix
+                    .Where(x => !x.IsActive && x.Id != null)
+                    .Select(x => x.Id.Value);
+                //надсилаємо запит на видалення
                 await AppDataService.DeleteDiscretionaryAccessMatrixItems(deleteList);
+                //завантажуємо оновлену сатрицю
                 await LoadUserDiscretionaryMatrix();
             }
         }

@@ -90,3 +90,10 @@ CREATE TABLE DiscretionaryAccessMatrix (
   FOREIGN KEY (ActionTypeId) REFERENCES ActionTypes (Id)
 );
 CREATE UNIQUE INDEX [DiscretionaryAccessMatrix_UI] on [DiscretionaryAccessMatrix] (UserId, FileId);
+
+/*insert into main.Files (Id, Name, FilePath, FileType, MinimumClearanceId)
+values  (1, 'Txt 1', 'D:\LabsData\TBD\TBD_Redchych\Data\TextFile1.txt', 0, 1),
+        (2, 'Txt 2', 'D:\LabsData\TBD\TBD_Redchych\Data\TextFile2.txt', 0, 1),
+        (3, 'Txt 3', 'D:\LabsData\TBD\TBD_Redchych\Data\TextFile3.txt', 0, 1),
+        (4, 'Exe 1', 'D:\LabsData\TBD\TBD_Redchych\Data\secret_executable_file.exe', 2, 1),
+        (6, 'Img 1', 'D:\LabsData\TBD\TBD_Redchych\Data\ImgFile.png', 1, 1);*/

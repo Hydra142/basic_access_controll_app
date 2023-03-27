@@ -52,22 +52,35 @@ public class UserMainPageViewModel : ObservableRecipient
 
     public async Task PageLoaded()
     {
+        //отримання доступних файлів з бд
         var currentFiles = await AppDataService.GetUserFiles(CurrentUser);
+        //створення массиву ідентифікаторів 
         var currentFilesIds = currentFiles.Select(file => file.Id);
+        //наповнення динамічної змінної
         currentFiles.ForEach(file => UserFiles.Add(file));
+        //перевірка чи у користувача обрана дискреційна модель розмежування
         if (CurrentUser != null && CurrentUser.AccessControlModelId == AccessControlModel.DiscretionaryAccessControl)
         {
             var updateFilesTimer = new DispatcherTimer();
+            //встановлення періодичності вконування функції (5 сек)
             updateFilesTimer.Interval = TimeSpan.FromSeconds(5);
+            //визначення фкнкції яка буде виконуватись
             updateFilesTimer.Tick += async (sender, args) =>
             {
+                //отримання доступних файлів з бд
                 var files = await AppDataService.GetUserFiles(CurrentUser);
+                //знахоженння які з файлів не були присутніми
                 var newFiles = files.Where(x => !currentFilesIds.Contains(x.Id)).ToList();
+                //наповнення динамічної змінної
                 newFiles.ForEach(file => UserFiles.Add(file));
+                //знахходження елементів матриці які вже не пристутні в результаті
                 var removedFilesIds = currentFilesIds.Where(x => !files.Select(z => z.Id).Contains(x)).ToList();
+                //видалення файлів з динамічної змінної
                 UserFiles.Where(x => removedFilesIds.Contains(x.Id)).ToList().ForEach(x => UserFiles.Remove(x));
+                //збереження нового списку ідентифікаторів
                 currentFilesIds = UserFiles.Select(x => x.Id);
             };
+            //запуск 
             updateFilesTimer.Start();
         }
     }

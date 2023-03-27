@@ -53,9 +53,9 @@
                     </Grid.ColumnDefinitions>
                     <Grid Grid.Column="1">
                         <Grid.RowDefinitions>
-                            <RowDefinition/>
-                            <RowDefinition/>
-                            <RowDefinition/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
                         <TextBlock Grid.Row="0" Text="{x:Bind Name}" FontSize="16" VerticalAlignment="Center"/>
                         <StackPanel Grid.Row="1" Orientation="Horizontal">
