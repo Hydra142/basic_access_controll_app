@@ -32,9 +32,28 @@ public partial class File
     public DateTime? AllowFrom;
     public DateTime? AllowTo;
     public string? AvailabilityTimePeriod;
+
+    public string FormattedAction => GetFormattedAction();
     public object ToObject()
     {
         return new { Id = Id, Name = Name, FilePath = FilePath, FileType = (int)FileType, MinimumClearanceId = MinimumClearanceId };
+    }
+
+    private string GetFormattedAction()
+    {
+        var actions = new List<string>();
+        if (IsReadAble) actions.Add("r");
+        if (IsWriteAble) actions.Add("w");
+        if (IsExecuteAble) actions.Add("e");
+        if (FileType == FileTypes.Txt || FileType == FileTypes.Img)
+        {
+            actions = actions.Where(x => x == "r" || x == "w").ToList();
+        }
+        if (FileType == FileTypes.Exe)
+        {
+            actions = actions.Where(x => x == "e").ToList();
+        }
+        return $"({string.Join(",", actions)})";
     }
 }
 public enum FileTypes

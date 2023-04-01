@@ -76,6 +76,7 @@ namespace SafeMessenge.ViewModels
         }
         public ObservableCollection<User> Users = new();
         public ObservableCollection<DiscretionaryMatrixItem> CurrentUserDiscretionaryMatrix = new();
+        public ObservableCollection<UserRoleItem> CurrentUserRoles = new();
         private User? _selectedUser;
         public User? SelectedUser
         {
@@ -93,6 +94,7 @@ namespace SafeMessenge.ViewModels
                     if (value.Id != oldSelectionId)
                     {
                         _ = LoadUserDiscretionaryMatrix();
+                        _ = LoadUserRoles();
                     }
                 }
             }
@@ -128,6 +130,27 @@ namespace SafeMessenge.ViewModels
             }
         }
 
+        //role section
+        public ObservableCollection<RoleFileItem> CurrentRoleItems = new();
+        public ObservableCollection<Role> Roles = new();
+        private Role? _selectedRole;
+        public Role? SelectedRole
+        {
+            get => _selectedRole;
+            set
+            {
+                var oldSelectionId = _selectedRole?.Id;
+                SetProperty(ref _selectedRole, value);
+                if (value != null)
+                {
+                    if (value.Id != oldSelectionId)
+                    {
+                        _ = LoadRoleFiles();
+                    }
+                }
+            }
+        }
+
 
 
         public AdminMainPageViewModel(NavigationService navigationService, AppDataService appDataService)
@@ -155,6 +178,7 @@ namespace SafeMessenge.ViewModels
                 ActionTypeOptions.Add(new(actionType.Id.ToString(), actionType.Name));
             }
             AppDataService.Files.ForEach(file => Files.Add(file));
+            AppDataService.Roles.ForEach(role => Roles.Add(role));
             AppDataService.Users.Where(x => !x.IsAdmin).ToList().ForEach(user => Users.Add(user));
         }
         public async Task LoadUserDiscretionaryMatrix()
@@ -169,6 +193,32 @@ namespace SafeMessenge.ViewModels
                 }
             }
             
+        }
+        public async Task LoadUserRoles()
+        {
+            if (SelectedUser != null)
+            {
+                CurrentUserRoles.Clear();
+                foreach (var item in await AppDataService.GetUserRolesById(SelectedUser.Id))
+                {
+                    CurrentUserRoles.Add(item);
+                }
+            }
+            
+        }
+
+        public async Task LoadRoleFiles()
+        {
+            CurrentRoleItems.Clear();
+            if (SelectedRole != null  && SelectedRole.Id.HasValue)
+            {
+                foreach (var item in await AppDataService.GetRoleFilesById(SelectedRole.Id.Value))
+                {
+                    item.ActionTypesOptions = AppDataService.ActionTypes;
+                    CurrentRoleItems.Add(item);
+                }
+            }
+
         }
 
         public async void SaveUserData()
@@ -187,10 +237,28 @@ namespace SafeMessenge.ViewModels
             }
         }
 
+        public async void SaveRole()
+        {
+            if (SelectedRole != null)
+            {
+                var role = await AppDataService.InsertOrUpdateRole(SelectedRole);
+                SelectedRole.Id = role.Id;
+                await LoadRoleFiles();
+                await LoadUserRoles();
+            }
+        }
+
         public void LoadCreateFileTemplate()
         {
+            CurrentRoleItems.Clear();
             Files.Insert(0, new File() { Name = "Новий файл", MinimumClearanceId = AppDataService.SecurityClearances.First().Id });
             SelectedFile = Files[0];
+        }
+
+        public void LoadCreateRoleTemplate()
+        {
+            Roles.Insert(0, new Role() { Name = $"Роль {Roles.Count + 1}"});
+            SelectedRole = Roles[0];
         }
 
         public async Task SaveUserDiscretionaryAccessMatrix()
@@ -211,12 +279,52 @@ namespace SafeMessenge.ViewModels
                 await LoadUserDiscretionaryMatrix();
             }
         }
+
+        public async Task SaveUserRoles()
+        {
+            if (SelectedUser != null)
+            {
+                // дістаємо всі елемети матриці у якийх адміністатор активував чекбокс
+                var matrix = CurrentUserRoles.Where(x => x.IsActive).ToList();
+                //змінюємо поточні занчення або додаємо нові до БД
+                await AppDataService.InsertOrUpdateUserRoles(matrix);
+                // дістаємо айді всіх елеметів які були декативоані адміністратором
+                var deleteList = CurrentUserRoles
+                    .Where(x => !x.IsActive && x.Id != null)
+                    .Select(x => x.Id.Value);
+                //надсилаємо запит на видалення
+                await AppDataService.DeleteUserRoles(deleteList);
+                //завантажуємо оновлену сатрицю
+                await LoadUserRoles();
+            }
+        }
+
+        public async Task SaveRoleFilesItems()
+        {
+            if (SelectedRole != null && SelectedRole.Id.HasValue)
+            {
+                // дістаємо всі елемети матриці у якийх адміністатор активував чекбокс
+                var matrix = CurrentRoleItems.Where(x => x.IsActive).ToList();
+                //змінюємо поточні занчення або додаємо нові до БД
+                await AppDataService.InsertOrUpdateRoleFile(matrix);
+                // дістаємо айді всіх елеметів які були декативоані адміністратором
+                var deleteList = CurrentRoleItems
+                    .Where(x => !x.IsActive && x.Id != null)
+                    .Select(x => x.Id.Value);
+                //надсилаємо запит на видалення
+                await AppDataService.DeleteRoleFiles(deleteList);
+                //завантажуємо оновлену сатрицю
+                await LoadRoleFiles();
+            }
+        }
     }
     public enum AdminSection
     {
         [Display(Name = "Користувачі")]
         User,
         [Display(Name = "Файли")]
-        File
+        File,
+        [Display(Name = "Ролі")]
+        Role
     }
 }

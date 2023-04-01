@@ -1,0 +1,1 @@
+﻿DELETE FROM UserRoles WHERE Id IN @Ids

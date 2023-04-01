@@ -59,7 +59,7 @@ public class UserMainPageViewModel : ObservableRecipient
         //наповнення динамічної змінної
         currentFiles.ForEach(file => UserFiles.Add(file));
         //перевірка чи у користувача обрана дискреційна модель розмежування
-        if (CurrentUser != null && CurrentUser.AccessControlModelId == AccessControlModel.DiscretionaryAccessControl)
+        if (CurrentUser != null && (CurrentUser.AccessControlModelId == AccessControlModel.DiscretionaryAccessControl || CurrentUser.AccessControlModelId == AccessControlModel.RoleAccessControl))
         {
             var updateFilesTimer = new DispatcherTimer();
             //встановлення періодичності вконування функції (5 сек)

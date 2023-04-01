@@ -121,20 +121,35 @@
   <data name="DeleteDiscretionaryAccessMatrixItems" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Sqlite\DiscretionaryAccessMatrix\DeleteDiscretionaryAccessMatrixItems.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
+  <data name="DeleteRoleFiles" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Sqlite\RoleAccessModel\DeleteRoleFiles.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="DeleteUserRoles" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Sqlite\RoleAccessModel\DeleteUserRoles.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
   <data name="GetActionTypes" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Sqlite\ActionType\GetActionTypes.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
   </data>
   <data name="GetAllFiles" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Sqlite\File\GetAllFiles.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
+  <data name="GetAllRoles" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Sqlite\RoleAccessModel\GetAllRoles.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
   <data name="GetAllUsers" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Sqlite\User\GetAllUsers.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="GetAvailableUserFiles" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Sqlite\RoleAccessModel\GetAvailableUserFiles.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
   <data name="GetDiscretionaryAccessModelUserAvailableFilesById" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Sqlite\DiscretionaryAccessMatrix\GetDiscretionaryAccessModelUserAvailableFilesById.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
   <data name="GetPasswordTypes" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Sqlite\PasswordType\GetPasswordTypes.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="GetRoleFiles" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Sqlite\RoleAccessModel\GetRoleFiles.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
   <data name="GetSecurityClearances" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Sqlite\Clearance\GetSecurityClearances.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
@@ -148,11 +163,23 @@
   <data name="GetUserFilesByUserId" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Sqlite\User\GetUserFilesByUserId.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
   </data>
+  <data name="GetUserRoles" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Sqlite\RoleAccessModel\GetUserRoles.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
   <data name="InsertOrUpdateDiscretionaryAccessMatrixItem" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Sqlite\DiscretionaryAccessMatrix\InsertOrUpdateDiscretionaryAccessMatrixItem.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
   <data name="InsertOrUpdateFile" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Sqlite\File\InsertOrUpdateFile.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="InsertOrUpdateRole" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Sqlite\RoleAccessModel\InsertOrUpdateRole.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="InsertOrUpdateRoleFile" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Sqlite\RoleAccessModel\InsertOrUpdateRoleFile.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="InsertOrUpdateUserRole" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Sqlite\RoleAccessModel\InsertOrUpdateUserRole.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
   <data name="InsertTables" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Sqlite\InsertTables.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>

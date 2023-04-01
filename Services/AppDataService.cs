@@ -12,6 +12,7 @@ namespace SafeMessenge.Services;
 public class AppDataService
 {
     public List<User> Users { get; set; } = new();
+    public List<Role> Roles { get; set; } = new();
     public List<PasswordType> PasswordTypes { get; set; } = new();
     public List<SecurityClearance> SecurityClearances { get; set; } = new();
     public List<ActionType> ActionTypes { get; set; } = new();
@@ -30,6 +31,7 @@ public class AppDataService
         await LoadSecurityClearances();
         await LoadActionTypes();
         await LoadFiles();
+        await LoadRoles();
     }
 
     public async Task<List<User>> SetUsers()
@@ -105,6 +107,9 @@ public class AppDataService
             //при дискреційному
             AccessControlModel.DiscretionaryAccessControl => 
                 Resources.GetDiscretionaryAccessModelUserAvailableFilesById,
+            //при рольовому
+            AccessControlModel.RoleAccessControl =>
+                Resources.GetAvailableUserFiles,
             //значення за замовчуванням (мандат)
             _ => Resources.GetUserFilesByUserId,
         };
@@ -125,6 +130,20 @@ public class AppDataService
         return null;
     }
 
+    public async Task<List<Role>> LoadRoles()
+    {
+        Roles = (await _sqliteConnector.Read<Role>(Resources.GetAllRoles, new { })).ToList();
+        return Roles;
+    }
+    public async Task<Role?> InsertOrUpdateRole(Role role)
+    {
+        var resp = await _sqliteConnector.Read<Role>(Resources.InsertOrUpdateRole, role.ToObject());
+        if (resp != null && resp.Count > 0)
+        {
+            return resp.First();
+        }
+        return null;
+    }
     public async Task<List<DiscretionaryMatrixItem>> GetUserDiscretionaryAccessMatrixById(long id)
     {
         return (await _sqliteConnector.Read<DiscretionaryMatrixItem>(Resources.GetUserDiscretionaryAccessMatrixById, new { UserId = id })).ToList();
@@ -142,5 +161,43 @@ public class AppDataService
     {
         if (!ids.Any()) return;
         await _sqliteConnector.Write(Resources.DeleteDiscretionaryAccessMatrixItems, new { Ids = ids.ToArray() });
+    }
+
+    public async Task<List<RoleFileItem>> GetRoleFilesById(int id)
+    {
+        return (await _sqliteConnector.Read<RoleFileItem>(Resources.GetRoleFiles, new { RoleId = id })).ToList();
+    }
+
+    public async Task InsertOrUpdateRoleFile(List<RoleFileItem> items)
+    {
+        foreach (var item in items)
+        {
+            await _sqliteConnector.Write(Resources.InsertOrUpdateRoleFile, item.ToObject());
+        }
+    }
+
+    public async Task DeleteRoleFiles(IEnumerable<int> ids)
+    {
+        if (!ids.Any()) return;
+        await _sqliteConnector.Write(Resources.DeleteRoleFiles, new { Ids = ids.ToArray() });
+    }
+
+    public async Task<List<UserRoleItem>> GetUserRolesById(long id)
+    {
+        return (await _sqliteConnector.Read<UserRoleItem>(Resources.GetUserRoles, new { UserId = id })).ToList();
+    }
+
+    public async Task InsertOrUpdateUserRoles(List<UserRoleItem> items)
+    {
+        foreach (var item in items)
+        {
+            await _sqliteConnector.Write(Resources.InsertOrUpdateUserRole, item.ToObject());
+        }
+    }
+
+    public async Task DeleteUserRoles(IEnumerable<int> ids)
+    {
+        if (!ids.Any()) return;
+        await _sqliteConnector.Write(Resources.DeleteUserRoles, new { Ids = ids.ToArray() });
     }
 }

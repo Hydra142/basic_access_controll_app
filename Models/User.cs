@@ -18,7 +18,8 @@ public partial class User
     public string PasswordTypeName;
     public string PasswordValidationRegex;
     public string PasswordTypeDescription;
-    public AccessControlModel AccessControlModelId;
+    [ObservableProperty]
+    public AccessControlModel _AccessControlModelId;
     //mandatoty access model fields start
     public int ClearanceId;
     public int ActionTypeId;

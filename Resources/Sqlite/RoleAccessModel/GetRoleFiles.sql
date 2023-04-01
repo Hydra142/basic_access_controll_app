@@ -1,6 +1,7 @@
-﻿SELECT
+﻿/*Достаємо матрицю роль - файл*/
+SELECT
 	M.Id AS Id,
-	U.Id AS UserId,
+	R.Id AS RoleId,
 	F.Id AS FileId,
 	F.Name AS FileName,
 	IFNULL(AT.Id, 1) AS ActionTypeId,
@@ -8,8 +9,8 @@
 	M.AllowTo AS AllowTo,
 	M.Id AS IsActive /*перевірка чи активне дане правило*/
 FROM Files AS F
-LEFT JOIN Users AS U ON U.Id = @UserId
-LEFT JOIN DiscretionaryAccessMatrix AS M ON M.UserId = U.Id AND M.FileId = F.Id
+LEFT JOIN Roles AS R ON R.Id = @RoleId
+LEFT JOIN RoleFiles AS M ON M.RoleId = R.Id AND M.FileId = F.Id
 LEFT JOIN ActionTypes AS AT ON AT.Id = M.ActionTypeId
-WHERE U.Id = @UserId
+WHERE R.Id = @RoleId
 ORDER BY F.Id

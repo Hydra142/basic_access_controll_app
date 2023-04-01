@@ -10,6 +10,6 @@ public sealed partial class MainWindow : WindowEx
         InitializeComponent();
         Content = null;
         Title = "";
-        MinWidth = 1300;
+        //MinWidth = 1300;
     }
 }

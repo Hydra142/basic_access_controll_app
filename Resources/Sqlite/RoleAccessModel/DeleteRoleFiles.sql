@@ -1,0 +1,1 @@
+﻿DELETE FROM RoleFiles WHERE Id IN @Ids

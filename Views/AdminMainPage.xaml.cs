@@ -63,6 +63,7 @@ namespace SafeMessenge.Views
             {
                 UsersSection.Visibility = Visibility.Collapsed;
                 FilesSection.Visibility = Visibility.Collapsed;
+                RoleSection.Visibility = Visibility.Collapsed;
                 switch (section)
                 {
                     case AdminSection.User:
@@ -70,6 +71,9 @@ namespace SafeMessenge.Views
                         break;
                     case AdminSection.File:
                         FilesSection.Visibility = Visibility.Visible;
+                        break;
+                    case AdminSection.Role:
+                        RoleSection.Visibility = Visibility.Visible;
                         break;
                 }
             }

@@ -10,6 +10,7 @@
     <Page.Resources>
         <helpers:DateTimeToStringConverter  x:Key="DateTimeToStringConverter"/>
         <helpers:EnumToStringConverter x:Key="EnumToStringConverter"/>
+        <helpers:EnumToVisibilityConverter x:Key="EnumToVisibilityConverter" />
         <helpers:ArrayToVisibilityConverter x:Key="ArrayToVisibilityConverter"/>
         <helpers:ObjectToVisibilityConverter x:Key="ObjectToVisibilityConverter"/>
         <!--<SolidColorBrush x:Key="ListViewItemSelectionIndicatorBrush" Color="#ffd149" />
@@ -115,7 +116,77 @@
                 </Grid>
             </GridViewItem>
         </DataTemplate>
+        <DataTemplate x:DataType="models:Role" x:Key="RoleListItemTemplate">
+            <GridViewItem Margin="0 3 0 0" Padding="10" BorderThickness="0 0 0 0">
+                <GridViewItem.Resources>
+                    <Style TargetType="GridViewItem">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="GridViewItem">
+                                    <ListViewItemPresenter
+                                        CornerRadius="10 0 0 10"
+                                        Background="#f57c00"
+                                        PressedBackground="#c66900"
+                                        PointerOverBackground="#c66900"
+                                        SelectedBackground="#ffd149"
+                                        SelectedPointerOverBackground="#ffd149"
+                                        SelectedPressedBackground="#ffd149"/>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </GridViewItem.Resources>
+                <Grid Padding="8" Width="200">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <RichTextBlock IsTextSelectionEnabled="False" FontSize="17" VerticalAlignment="Center" Margin="0 0 0 0">
+                        <Paragraph>
+                            <Run Text="{x:Bind Name, Mode=OneWay}"/>
+                        </Paragraph>
+                    </RichTextBlock>
+                </Grid>
+            </GridViewItem>
+        </DataTemplate>
         <DataTemplate x:DataType="models:DiscretionaryMatrixItem" x:Key="DiscretionaryMatrixItemTemplate">
+            <Grid ColumnSpacing="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="200"/>
+                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <CheckBox Content="{x:Bind FileName, Mode=OneWay}" IsChecked="{x:Bind IsActive, Mode=TwoWay}" Foreground="Black"/>
+                <ComboBox
+                    Grid.Column="1"
+                    BorderBrush="Gray"
+                    BorderThickness="1"
+                    HorizontalAlignment="Stretch"
+                    ItemsSource="{x:Bind ActionTypesOptions, Mode=OneWay}"
+                    SelectedValuePath="Id"
+                    DisplayMemberPath="Name"
+                    SelectedValue="{x:Bind ActionTypeId, Mode=TwoWay}"
+                    />
+                <StackPanel Grid.Column="2" Orientation="Horizontal">
+                    <TextBlock Text="З:" VerticalAlignment="Center" Foreground="Black"/>
+                    <TextBox Grid.Column="2" TextAlignment="Center" Text="{x:Bind AllowFrom, Converter={StaticResource DateTimeToStringConverter }, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
+                </StackPanel>
+                <StackPanel Grid.Column="3" Orientation="Horizontal">
+                    <TextBlock Text="До:" VerticalAlignment="Center" Foreground="Black"/>
+                    <TextBox Grid.Column="2" TextAlignment="Center" Text="{x:Bind AllowTo, Converter={StaticResource DateTimeToStringConverter }, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
+                </StackPanel>
+                
+            </Grid>
+        </DataTemplate>
+        <DataTemplate x:DataType="models:UserRoleItem" x:Key="UserRoleItemTemplate">
+            <Grid ColumnSpacing="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <CheckBox Content="{x:Bind RoleName, Mode=OneWay}" IsChecked="{x:Bind IsActive, Mode=TwoWay}" Foreground="Black"/>
+            </Grid>
+        </DataTemplate>
+        <DataTemplate x:DataType="models:RoleFileItem" x:Key="RoleFileItemTemplate">
             <Grid ColumnSpacing="10">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="200"/>
@@ -255,7 +326,7 @@
                         </GridView.Resources>
                         <GridView.ItemsPanel>
                             <ItemsPanelTemplate>
-                                <ItemsWrapGrid Orientation="Vertical" MaximumRowsOrColumns="1"/>
+                                <ItemsWrapGrid Orientation="Vertical" MaximumRowsOrColumns="2"/>
                             </ItemsPanelTemplate>
                         </GridView.ItemsPanel>
                         <GridView.ItemTemplate>
@@ -275,29 +346,31 @@
                         DisplayMemberPath="Value"
                         ItemsSource="{x:Bind ViewModel.PasswordTypeOptions, Mode=OneWay}"
                         SelectedItem="{x:Bind ViewModel.SelectedPasswordTypeOption, Mode=TwoWay}"/>
-                    <TextBlock Grid.Row="4" Grid.Column="0" Text="Рівень доступу (мандат):" VerticalAlignment="Center" FontSize="18" FontWeight="Normal" Foreground="Black"/>
+                    <TextBlock Grid.Row="4" Grid.Column="0" Text="Рівень доступу:" VerticalAlignment="Center" FontSize="18" FontWeight="Normal" Foreground="Black" Visibility="{x:Bind ViewModel.SelectedUser.AccessControlModelId, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=MandatoryAccessControl, Mode=OneWay}"/>
                     <usercontrols:CustomComboBox
                         Grid.Row="4"
                         Grid.Column="1"
                         DisplayMemberPath="Value"
                         ItemsSource="{x:Bind ViewModel.SecurityClearanceOptions, Mode=OneWay}"
-                        SelectedItem="{x:Bind ViewModel.SelectedSecurityClearanceOption, Mode=TwoWay}"/>
-                    <TextBlock Grid.Row="5" Grid.Column="0" Text="Дозволені дії (мандат):" VerticalAlignment="Center" FontSize="18" FontWeight="Normal" Foreground="Black"/>
+                        SelectedItem="{x:Bind ViewModel.SelectedSecurityClearanceOption, Mode=TwoWay}"
+                        Visibility="{x:Bind ViewModel.SelectedUser.AccessControlModelId, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=MandatoryAccessControl, Mode=OneWay}"/>
+                    <TextBlock Grid.Row="5" Grid.Column="0" Text="Дозволені дії:" VerticalAlignment="Center" FontSize="18" FontWeight="Normal" Foreground="Black" Visibility="{x:Bind ViewModel.SelectedUser.AccessControlModelId, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=MandatoryAccessControl, Mode=OneWay}"/>
                     <usercontrols:CustomComboBox
                         Grid.Row="5"
                         Grid.Column="1"
                         DisplayMemberPath="Value"
                         ItemsSource="{x:Bind ViewModel.ActionTypeOptions, Mode=OneWay}"
-                        SelectedItem="{x:Bind ViewModel.SelectedActionTypeOption, Mode=TwoWay}"/>
+                        SelectedItem="{x:Bind ViewModel.SelectedActionTypeOption, Mode=TwoWay}"
+                        Visibility="{x:Bind ViewModel.SelectedUser.AccessControlModelId, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=MandatoryAccessControl, Mode=OneWay}"/>
                     <Button Grid.Row="6" Grid.Column="1" Content="Зберегти" HorizontalAlignment="Right" VerticalAlignment="Bottom" Background="red" Click="{x:Bind ViewModel.SaveUserData}"/>
                 </Grid>
-                <Grid Grid.Row="0" Grid.Column="1" Padding="10" RowSpacing="10" BorderBrush="Black" BorderThickness="2 5 0 0" Background="#f57c00">
+                <Grid Grid.Row="0" Grid.Column="1" Padding="10" RowSpacing="10" BorderBrush="Black" BorderThickness="2 5 0 0" Background="#f57c00" Visibility="{x:Bind ViewModel.SelectedUser.AccessControlModelId, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=DiscretionaryAccessControl, Mode=OneWay}">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
-                    <TextBlock Text="Контроль ресурсів (Дискреційна)" HorizontalAlignment="Center" FontSize="20" FontWeight="Medium"  Foreground="Black"/>
+                    <TextBlock Text="Контроль ресурсів" HorizontalAlignment="Center" FontSize="20" FontWeight="Medium"  Foreground="Black"/>
                     <ListView
                             Grid.Row="1"
                             ItemsSource="{x:Bind ViewModel.CurrentUserDiscretionaryMatrix, Mode=TwoWay}"
@@ -307,6 +380,23 @@
                             SelectionMode="None">
                     </ListView>
                     <Button Grid.Row="2" Content="Зберегти" Click="{x:Bind ViewModel.SaveUserDiscretionaryAccessMatrix}" Background="Red" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
+                </Grid>
+                <Grid Grid.Row="0" Grid.Column="1" Padding="10" RowSpacing="10" BorderBrush="Black" BorderThickness="2 5 0 0" Background="#f57c00" Visibility="{x:Bind ViewModel.SelectedUser.AccessControlModelId, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=RoleAccessControl, Mode=OneWay}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Text="Контроль ролей" HorizontalAlignment="Center" FontSize="20" FontWeight="Medium"  Foreground="Black"/>
+                    <ListView
+                            Grid.Row="1"
+                            ItemsSource="{x:Bind ViewModel.CurrentUserRoles, Mode=TwoWay}"
+                            ItemTemplate="{StaticResource UserRoleItemTemplate}"
+                            ScrollViewer.VerticalScrollMode="Disabled"
+                            ScrollViewer.IsVerticalScrollChainingEnabled="False"
+                            SelectionMode="None">
+                    </ListView>
+                    <Button Grid.Row="2" Content="Зберегти" Click="{x:Bind ViewModel.SaveUserRoles}" Background="Red" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
                 </Grid>
             </Grid>
         </Grid>
@@ -377,6 +467,73 @@
                         SelectedItem="{x:Bind ViewModel.SelectedFileSecurityClearanceOption, Mode=TwoWay}"/>
                     
                     <Button Grid.Row="5" Grid.Column="1" Content="Зберегти" HorizontalAlignment="Right" Background="red" Click="{x:Bind ViewModel.SaveFile}"/>
+                </Grid>
+            </Grid>
+        </Grid>
+        <Grid Grid.Row="1" Background="#ffd149" Name="RoleSection">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel Orientation="Vertical" Background="#ffa000">
+                <Button Click="{x:Bind ViewModel.LoadCreateRoleTemplate}" Background="#bc5100" Margin="5" Padding="15, 6" CornerRadius="15" HorizontalAlignment="Stretch">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/Assets/plus.png" Height="25" Margin="0 0 15 0" Visibility="Visible"/>
+                        <TextBlock Text="Створити" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+                <GridView
+                x:Name="Roles"
+                ItemsSource="{x:Bind ViewModel.Roles, Mode=OneWay}"
+                SelectedItem="{x:Bind ViewModel.SelectedRole, Mode=TwoWay}"
+                ItemTemplate="{StaticResource RoleListItemTemplate}"
+                Padding="5 0 0 0"
+                >
+                    <GridView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <ItemsWrapGrid Orientation="Horizontal" MaximumRowsOrColumns="1"/>
+                        </ItemsPanelTemplate>
+                    </GridView.ItemsPanel>
+                </GridView>
+            </StackPanel>
+            <Grid Grid.Column="1" ColumnSpacing="10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid Width="500" HorizontalAlignment="Left" Padding="10" RowSpacing="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Назва:" VerticalAlignment="Center" FontSize="18" FontWeight="Normal" Foreground="Black"/>
+                    <TextBox Grid.Row="0" Grid.Column="1" Text="{x:Bind ViewModel.SelectedRole.Name, Mode=TwoWay}"/>
+                    <Button Grid.Row="1" Grid.Column="1" Content="Зберегти" HorizontalAlignment="Right" VerticalAlignment="Bottom" Background="red" Click="{x:Bind ViewModel.SaveRole}"/>
+                </Grid>
+                <Grid Grid.Row="0" Grid.Column="1" Padding="10" RowSpacing="10" BorderBrush="Black" BorderThickness="2 5 0 0" Background="#f57c00">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Text="Контроль ресурсів" HorizontalAlignment="Center" FontSize="20" FontWeight="Medium"  Foreground="Black"/>
+                    <ListView
+                            Grid.Row="1"
+                            ItemsSource="{x:Bind ViewModel.CurrentRoleItems, Mode=TwoWay}"
+                            ItemTemplate="{StaticResource RoleFileItemTemplate}"
+                            ScrollViewer.VerticalScrollMode="Disabled"
+                            ScrollViewer.IsVerticalScrollChainingEnabled="False"
+                            SelectionMode="None">
+                    </ListView>
+                    <Button Grid.Row="2" Content="Зберегти" Click="{x:Bind ViewModel.SaveRoleFilesItems}" Background="Red" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
                 </Grid>
             </Grid>
         </Grid>

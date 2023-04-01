@@ -12,6 +12,8 @@ public enum AccessControlModel
     MandatoryAccessControl,
     [Display(Name = "Дискреційна")]
     DiscretionaryAccessControl,
+    [Display(Name = "Рольова")]
+    RoleAccessControl,
 }
 
 

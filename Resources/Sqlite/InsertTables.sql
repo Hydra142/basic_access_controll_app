@@ -59,8 +59,37 @@ INSERT INTO Users ([Id],[UserName], [Password], [PasswordTypeId], [IsAdmin], [Ac
 (4, 'Редчич 3', 'q', 1, 0, 2),
 (5, 'Редчич 4', 'q', 1, 0, 2),
 (6, 'Редчич 5', 'q', 1, 0, 2);
+/*РОЛЬОВА СТАРТ*/
+DROP TABLE IF EXISTS [Roles];
+CREATE TABLE Roles (
+  Id INTEGER PRIMARY KEY AUTOINCREMENT,
+  Name TEXT NOT NULL UNIQUE
+);
 
+DROP TABLE IF EXISTS [UserRoles];
+CREATE TABLE UserRoles (
+  Id INTEGER PRIMARY KEY AUTOINCREMENT,
+  UserId INTEGER NOT NULL,
+  RoleId INTEGER NOT NULL,
+  FOREIGN KEY (RoleId) REFERENCES Roles (Id),
+  FOREIGN KEY (UserId) REFERENCES Users (Id)
+);
+CREATE UNIQUE INDEX [UserRoles_UI] on [UserRoles] (UserId, RoleId);
 
+DROP TABLE IF EXISTS [RoleFiles];
+CREATE TABLE RoleFiles (
+  Id INTEGER PRIMARY KEY AUTOINCREMENT,
+  RoleId INTEGER NOT NULL,
+  FileId INTEGER NOT NULL,
+  ActionTypeId INTEGER NOT NULL,
+  AllowFrom DATETIME default NULL,
+  AllowTo DATETIME default NULL,
+  FOREIGN KEY (RoleId) REFERENCES Roles (Id),
+  FOREIGN KEY (FileId) REFERENCES Files (Id),
+  FOREIGN KEY (ActionTypeId) REFERENCES ActionTypes (Id)
+);
+CREATE UNIQUE INDEX [RoleFiles_UI] on [RoleFiles] (RoleId, FileId);
+/*РОЛЬОВА КІНЕЦЬ*/
 DROP TABLE IF EXISTS [Files];
 CREATE TABLE Files (
   Id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -69,13 +98,7 @@ CREATE TABLE Files (
   FileType INTEGER NOT NULL default 0,
   MinimumClearanceId INTEGER NOT NULL,
   FOREIGN KEY (MinimumClearanceId) REFERENCES SecurityClearances (Id)
-);/*
-INSERT INTO Files ([Id],[Name],[FilePath],[MinimumClearanceId], [FileType]) VALUES
-(1, 'ЗвичайнийФайл','D:\LabsData\TBD\TBD_Redchych\Data\TextFile1.txt', 1, 0),
-(2, 'СлужбовийФайл','D:\LabsData\TBD\TBD_Redchych\Data\TextFile2.txt', 2, 0),
-(3, 'ТаємнийФайл','D:\LabsData\TBD\TBD_Redchych\Data\TextFile3.txt', 3, 0),
-(4, 'Таємниа картинка','D:\LabsData\TBD\TBD_Redchych\Data\ImgFile.png', 3, 1),
-(5, 'Таємний .exe','D:\LabsData\TBD\TBD_Redchych\Data\secret_executable_file.exe', 3, 2);*/
+);
 
 DROP TABLE IF EXISTS [DiscretionaryAccessMatrix];
 CREATE TABLE DiscretionaryAccessMatrix (
@@ -91,9 +114,9 @@ CREATE TABLE DiscretionaryAccessMatrix (
 );
 CREATE UNIQUE INDEX [DiscretionaryAccessMatrix_UI] on [DiscretionaryAccessMatrix] (UserId, FileId);
 
-/*insert into main.Files (Id, Name, FilePath, FileType, MinimumClearanceId)
+insert into main.Files (Id, Name, FilePath, FileType, MinimumClearanceId)
 values  (1, 'Txt 1', 'D:\LabsData\TBD\TBD_Redchych\Data\TextFile1.txt', 0, 1),
         (2, 'Txt 2', 'D:\LabsData\TBD\TBD_Redchych\Data\TextFile2.txt', 0, 1),
         (3, 'Txt 3', 'D:\LabsData\TBD\TBD_Redchych\Data\TextFile3.txt', 0, 1),
         (4, 'Exe 1', 'D:\LabsData\TBD\TBD_Redchych\Data\secret_executable_file.exe', 2, 1),
-        (6, 'Img 1', 'D:\LabsData\TBD\TBD_Redchych\Data\ImgFile.png', 1, 1);*/
+        (6, 'Img 1', 'D:\LabsData\TBD\TBD_Redchych\Data\ImgFile.png', 1, 1);
