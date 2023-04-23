@@ -19,6 +19,7 @@ namespace SafeMessenge.Views;
 /// </summary>
 public sealed partial class LoginPage : Page
 {
+    private CancellationTokenSource _cancellationToken;
     public LoginPageViewModel ViewModel { get; set; }
     public bool IsShowUSerSelection = false;
     public LoginPage()
@@ -28,12 +29,6 @@ public sealed partial class LoginPage : Page
     }
     private async void Login(object sender, RoutedEventArgs e)
     {
-        var a = new Counter();
-        var timeStarted = DateTime.Now;
-        //await a.StartIncreasers();
-        System.Diagnostics.Debug.WriteLine($"fiinished {DateTime.Now.Subtract(timeStarted).TotalSeconds}");
-        var cracker = new BruteForcePasswordCracker();
-        await cracker.Start();
         if (ViewModel.CyrrentUser != null && !ViewModel.CyrrentUser.Password.IsNullOrEmpty())
         {
             // перевірка на правильність паролю
@@ -44,7 +39,7 @@ public sealed partial class LoginPage : Page
             } else
             {
                 PasswordInput.BorderBrush = new SolidColorBrush(Colors.Red);
-                LoginErrorMessageBlock.Text = "Невіриний пароль!";
+                MessageBlock.Text = "Невіриний пароль!";
             }
         } else if (ViewModel.CyrrentUser != null) // корстувач новий
         {
@@ -58,7 +53,7 @@ public sealed partial class LoginPage : Page
             } else
             {
                 PasswordInput.BorderBrush = new SolidColorBrush(Colors.Red);
-                LoginErrorMessageBlock.Text = ViewModel.CyrrentUser.PasswordTypeDescription;
+                MessageBlock.Text = ViewModel.CyrrentUser.PasswordTypeDescription;
             }
         }
     }
@@ -75,29 +70,72 @@ public sealed partial class LoginPage : Page
             ViewModel.NavigationService.NavigateToUserMainPage();
         }
     }
-}
 
-public class Counter
-{
-    public int Count { get; private set; }
-
-    public async Task MyLongAction()
+    private async void StartBruteForce_Click(object sender, RoutedEventArgs e)
     {
-        
-            await Task.Delay(1000);
-        
+        StartBruteForceBtn.Visibility = Visibility.Collapsed;
+        BruteForceSettingsBtn.Visibility = Visibility.Collapsed;
+        StopBruteForceBtn.Visibility = Visibility.Visible;
+        LoadingIcon.Visibility = Visibility.Visible;
+
+
+        StartBruteForce(DisplayBruteForceResult);
     }
 
-    public async Task StartIncreasers()
+    public async Task StartBruteForce(Action<BruteForceStatus> onOperationCompleted)
     {
-        var tasks = new Task[100];
-
-        for (int i = 0; i < tasks.Length; i++)
+        _cancellationToken = new CancellationTokenSource();
+        try
         {
-            tasks[i] = Task.Run(() => MyLongAction());
+            var cracker = new BruteForcePasswordCracker();
+            DispatcherTimer timer = new DispatcherTimer();
+            timer.Interval = TimeSpan.FromMilliseconds(500);
+            timer.Tick += (s, args) =>
+            {
+                MessageBlock.Text = $"Максимальний час: {cracker.Status.TimeEstimated};\nШвидкість: {cracker.Status.Speed} комбінацій/сек;\nК-ть комбінацій: {cracker.Status.TotalCombinations};";
+            };
+            timer.Start();
+            var result = await Task.Run(() => cracker.Start(_cancellationToken.Token));
+            timer.Stop();
+            onOperationCompleted(result);
+            cracker = null;
         }
-        var timeStarted = DateTime.Now;
-        await Task.WhenAll(tasks);
-        System.Diagnostics.Debug.WriteLine($"fiinished {DateTime.Now.Subtract(timeStarted).TotalSeconds}");
+        catch (OperationCanceledException)
+        {
+        }
+    }
+
+    private void DisplayBruteForceResult(BruteForceStatus result)
+    {
+        PasswordInput.Text = result.FoundPassword;
+        StartBruteForceBtn.Visibility = Visibility.Visible;
+        BruteForceSettingsBtn.Visibility = Visibility.Visible;
+        StopBruteForceBtn.Visibility = Visibility.Collapsed;
+        LoadingIcon.Visibility = Visibility.Collapsed;
+
+        MessageBlock.Text = $"Статус: {result.Message}; Час виконання: {result.TimeSpent}; Загаьна к-ть комбінацій: {result.TotalCombinations}";
+
+        var currBackground = PasswordInput.Background;
+        var currForeground = PasswordInput.Foreground;
+        PasswordInput.Background = new SolidColorBrush(result.Message == "Успіх" ? Colors.YellowGreen : Colors.Red);
+        PasswordInput.Foreground = new SolidColorBrush(Colors.Red);
+        DispatcherTimer timer = new DispatcherTimer();
+        timer.Interval = TimeSpan.FromSeconds(3);
+        timer.Tick += (s, args) =>
+        {
+            PasswordInput.Background = currBackground;
+            PasswordInput.Foreground = currForeground;
+            timer.Stop();
+        };
+        timer.Start();
+    }
+
+    private void StopBruteForce_Click(object sender, RoutedEventArgs e)
+    {
+        _cancellationToken.Cancel();
+        StartBruteForceBtn.Visibility = Visibility.Visible;
+        StopBruteForceBtn.Visibility = Visibility.Collapsed;
+        BruteForceSettingsBtn.Visibility = Visibility.Collapsed;
+        LoadingIcon.Visibility = Visibility.Collapsed;
     }
 }

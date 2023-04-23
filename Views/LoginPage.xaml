@@ -38,12 +38,12 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <Button Content="Про автора" Grid.Row="0" HorizontalAlignment="Right">
+        <Button Content="Про автора" Grid.Row="0" HorizontalAlignment="Right" Visibility="Collapsed">
             <Button.Flyout>
                 <Flyout>
                     <StackPanel>
@@ -64,6 +64,7 @@
         <GridView
             x:Name="UsersGridView"
             Grid.Row="3"
+            Height="178"
             ScrollViewer.VerticalScrollMode="Enabled"
             ScrollViewer.IsVerticalRailEnabled="True"
             ScrollViewer.VerticalScrollBarVisibility="Visible"
@@ -78,21 +79,35 @@
                 </ItemsPanelTemplate>
             </GridView.ItemsPanel>
         </GridView>
-        <Grid Grid.Row="4" HorizontalAlignment="Center" RowSpacing="15" Width="300">
+        <Grid Grid.Row="4" HorizontalAlignment="Center" RowSpacing="15" Width="350">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
+                <ColumnDefinition Width="30"/>
             </Grid.ColumnDefinitions>
             <TextBlock Grid.Row="0" Grid.Column="0" Text="Корстувач:" VerticalAlignment="Center" Margin="0 0 10 0"/>
             <TextBlock Grid.Row="0" Grid.Column="1" Text="{x:Bind ViewModel.CyrrentUser.Name, Mode=OneWay}"/>
             <TextBlock Grid.Row="1" Grid.Column="0" Text="Пароль:" VerticalAlignment="Center" Margin="0 0 10 0"/>
-            <TextBox Name="PasswordInput"  Grid.Row="1" Grid.Column="1" Text="{x:Bind ViewModel.Password, Mode=TwoWay}"/>
+            <TextBox Name="PasswordInput" Grid.Row="1" Grid.Column="1" Text="{x:Bind ViewModel.Password, Mode=TwoWay}"/>
+            <ProgressRing  Grid.Row="1" Grid.Column="2" Name="LoadingIcon" IsActive="True" Width="25" Height="25" Margin="5 0 0 0" Foreground="GreenYellow" Visibility="Collapsed"/>
+            <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center">
+                <Button Grid.Row="2" Grid.Column="1" Name="StartBruteForceBtn" Content="Підібрати" FontSize="11" HorizontalAlignment="Center" Click="StartBruteForce_Click" IsEnabled="{x:Bind ViewModel.IsUserSelected, Mode=OneWay}"/>
+                <Button Name="BruteForceSettingsBtn" Background="Transparent" BorderBrush="Transparent" Padding="3" Margin="2 0">
+                    <Image Source="/Assets/settings.png" Height="20" Visibility="Visible"/>
+                </Button>
+            </StackPanel>
+            <Button Grid.Row="2" Grid.Column="1" Name="StopBruteForceBtn" Content="Зупинити" FontSize="11" HorizontalAlignment="Center" Click="StopBruteForce_Click" Visibility="Collapsed" Background="red"/>
         </Grid>
-        <TextBlock Name="LoginErrorMessageBlock" Grid.Row="5" Grid.Column="0" Text="" HorizontalAlignment="Center" Foreground="red" Margin="0 0 10 0"/>
-        <Button Grid.Row="6" Content="Увійти" Click="Login" HorizontalAlignment="Center" Background="red" IsEnabled="{x:Bind ViewModel.IsUserSelected, Mode=OneWay}"/>
+        <RichTextBlock IsTextSelectionEnabled="True" TextAlignment="Center" Grid.Row="5" Grid.Column="0" HorizontalAlignment="Center" Foreground="red">
+            <Paragraph>
+                <Run x:Name="MessageBlock" FontSize="16"/>
+            </Paragraph>
+        </RichTextBlock>
+        <Button Grid.Row="6" Content="Увійти" Click="Login" HorizontalAlignment="Center" Background="Gray" IsEnabled="{x:Bind ViewModel.IsUserSelected, Mode=OneWay}"/>
     </Grid>
 </Page>

@@ -29,6 +29,7 @@
   
   <ItemGroup>
     <Content Remove="Assets\edit.png" />
+    <Content Remove="Assets\settings.png" />
   </ItemGroup>
 
   <ItemGroup>

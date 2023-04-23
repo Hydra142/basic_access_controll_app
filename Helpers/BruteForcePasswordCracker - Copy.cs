@@ -4,21 +4,26 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-
+using Microsoft.IdentityModel.Tokens;
 namespace SafeMessenge.Helpers;
 
-public class BruteForcePasswordCracker22
+public class BruteForcePasswordCracker
 {
     // the secret password which we will try to find via brute force
-    private static string password = "qwerty";
-    private static string result;
+    private string _password = "qwerty";
+    private string _result;
 
-    private static bool isMatched = false;
+    private bool _isMatched = false;
+    private int _charactersToTestLength = 0;
+    private long _computedKeys = 0;
+    private long _previousComputedKeys = 0;
+    private int _length_variation = 0;
+    private int _estimatedPasswordLength = 6;
+    private Timer _update_timer;
+    private bool _isStatusDisplayed = false;
+    public BruteForceStatus Status { get; set; } = new();
 
-    /* The length of the charactersToTest Array is stored in a
-     * additional variable to increase performance  */
-    private static int charactersToTestLength = 0;
-    private static long computedKeys = 0;
+
 
     /* An array containing the characters which will be used to create the brute force keys,
      * if less characters are used (e.g. only lower case chars) the faster the password is matched  */
@@ -26,37 +31,41 @@ public class BruteForcePasswordCracker22
     {
         'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j',
         'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't',
-        'u', 'v', 'w', 'x', 'y', 'z','A','B','C','D','E',
+        'u', 'v', 'w', 'x', 'y', 'z'/*,'A','B','C','D','E',
         'F','G','H','I','J','K','L','M','N','O','P','Q','R',
         'S','T','U','V','W','X','Y','Z','1','2','3','4','5',
-        '6','7','8','9','0','!','$','#','@','-'
+        '6','7','8','9','0','!','$','#','@','-'*/
     };
 
-    public async Task Start()
+    public async Task<BruteForceStatus> Start(CancellationToken cancellationToken/*, Action<BruteForcePasswordCrackerResult> onOperationCompleted*/)
     {
         var timeStarted = DateTime.Now;
-        System.Diagnostics.Debug.WriteLine("Start BruteForce - {0}", timeStarted.ToString());
-
         // The length of the array is stored permanently during runtime
-        charactersToTestLength = charactersToTest.Length;
-
+        _charactersToTestLength = charactersToTest.Length;
+        Status.TotalCombinations = Math.Pow(_charactersToTestLength, _estimatedPasswordLength + _length_variation);
+        
         // The length of the password is unknown, so we have to run trough the full search space
-        var estimatedPasswordLength = 3;        
-       
-            
 
-        while (!isMatched)
+        _update_timer = new Timer(UpdateStatus, null, 1000, Timeout.Infinite);
+        try
         {
-            /* The estimated length of the password will be increased and every possible key for this
-             * key length will be created and compared against the password */
-            estimatedPasswordLength++;
-            startBruteForce(estimatedPasswordLength);
-        }
-        System.Diagnostics.Debug.WriteLine($"Password matched. - {DateTime.Now}");
-        System.Diagnostics.Debug.WriteLine($"Time passed: {DateTime.Now.Subtract(timeStarted).TotalSeconds}s");
-        System.Diagnostics.Debug.WriteLine($"Resolved password: {result}");
-        System.Diagnostics.Debug.WriteLine($"Computed keys: {computedKeys}");
+            var passLength = _estimatedPasswordLength != 0 ? _estimatedPasswordLength - _length_variation : _estimatedPasswordLength;
+            while (!_isMatched && passLength <= _estimatedPasswordLength + _length_variation)
+            {
+                /* The estimated length of the password will be increased and every possible key for this
+                 * key length will be created and compared against the password */
 
+                startBruteForce(passLength, cancellationToken);
+                passLength++;
+            }
+        }
+        catch (OperationCanceledException)
+        {
+        }
+        Status.TimeSpent = $"{DateTime.Now.Subtract(timeStarted).TotalSeconds}s";
+        Status.FoundPassword = _result;
+        Status.Message = !cancellationToken.IsCancellationRequested ? _result.IsNullOrEmpty() ? "Невдача" : "Успіх" : "Скасовано";
+        return Status;
     }
 
 
@@ -64,16 +73,12 @@ public class BruteForcePasswordCracker22
     /// Starts the recursive method which will create the keys via brute force
     /// </summary>
     /// <param name="keyLength">The length of the key</param>
-    private static void startBruteForce(int keyLength)
+    private void startBruteForce(int keyLength, CancellationToken cancellationToken)
     {
         var keyChars = createCharArray(keyLength, charactersToTest[0]);
         // The index of the last character will be stored for slight perfomance improvement
         var indexOfLastChar = keyLength - 1;
-        createNewKey(0, keyChars, keyLength, indexOfLastChar);
-        if (!isMatched)
-        {
-            System.Diagnostics.Debug.WriteLine($"Thread '{Thread.CurrentThread.Name}' finshed job with no results");
-        }
+        createNewKey(0, keyChars, keyLength, indexOfLastChar, cancellationToken);
     }
 
     /// <summary>
@@ -82,7 +87,7 @@ public class BruteForcePasswordCracker22
     /// <param name="length">The length of the array</param>
     /// <param name="defaultChar">The char with whom the array will be filled</param>
     /// <returns></returns>
-    private static char[] createCharArray(int length, char defaultChar)
+    private char[] createCharArray(int length, char defaultChar)
     {
         return (from c in new char[length] select defaultChar).ToArray();
     }
@@ -95,42 +100,90 @@ public class BruteForcePasswordCracker22
     /// <param name="keyChars">The current key represented as char array</param>
     /// <param name="keyLength">The length of the key</param>
     /// <param name="indexOfLastChar">The index of the last character of the key</param>
-    private static void createNewKey(int currentCharPosition, char[] keyChars, int keyLength, int indexOfLastChar)
+    private void createNewKey(int currentCharPosition, char[] keyChars, int keyLength, int indexOfLastChar, CancellationToken cancellationToken)
     {
         var nextCharPosition = currentCharPosition + 1;
         // We are looping trough the full length of our charactersToTest array
-        for (int i = 0; i < charactersToTestLength; i++)
+        for (int i = 0; i < _charactersToTestLength; i++)
         {
+            if (cancellationToken.IsCancellationRequested)
+            {
+                throw new OperationCanceledException();
+            }
             /* The character at the currentCharPosition will be replaced by a
              * new character from the charactersToTest array => a new key combination will be created */
             keyChars[currentCharPosition] = charactersToTest[i];
 
             // метод буде викликати сам себе доки не перебере всі можливі комбінації або не знайде пароль
-            if (currentCharPosition < indexOfLastChar && !isMatched)
+            if (currentCharPosition < indexOfLastChar && !_isMatched)
             {
-                createNewKey(nextCharPosition, keyChars, keyLength, indexOfLastChar);
+                createNewKey(nextCharPosition, keyChars, keyLength, indexOfLastChar, cancellationToken);
             }
             else
             {
                 // A new key has been created, remove this counter to improve performance
-                computedKeys++;
+                //Interlocked.Increment(ref _computedKeys);
+                //Interlocked.Increment(ref _computedKeys);
+                if (!_isStatusDisplayed)
+                {
+                    Interlocked.Increment(ref _computedKeys);
+                }
+
 
                 /* The char array will be converted to a string and compared to the password. If the password
                  * is matched the loop breaks and the password is stored as result. */
-              
-                if ((new String(keyChars)) == password)
+
+                if ((new String(keyChars)) == _password)
                 {
-                    if (!isMatched)
+                    if (!_isMatched)
                     {
-                        System.Diagnostics.Debug.WriteLine($"res: {new String(keyChars)}");
-                        isMatched = true;
-                        result = new String(keyChars);
+                        _isMatched = true;
+                        _result = new String(keyChars);
                     }
-                    System.Diagnostics.Debug.WriteLine($"Thread '{Thread.CurrentThread.Name}' found password: {new String(keyChars)}");
                     return;
                 }
             }
         }
     }
+
+    private void UpdateStatus(object state)
+    {
+        CalculateSpeed(state);
+        CalculateEstimated();
+        _isStatusDisplayed = true;
+        _update_timer.Dispose();
+    }
+
+    private void CalculateSpeed(object state)
+    {
+        long currentComputedKeys = Interlocked.Read(ref _computedKeys);
+        long keysPerSecond = currentComputedKeys - _previousComputedKeys;
+        _previousComputedKeys = currentComputedKeys;
+        Status.Speed = keysPerSecond;
+    }
+
+    private void CalculateEstimated()
+    {
+        if (Status.Speed != 0)
+        {
+            double totalTimeInSeconds = (Status.TotalCombinations /*- Interlocked.Read(ref _computedKeys)*/) / (Status.Speed * (1 + (10 / 100)));
+            TimeSpan totalTime = TimeSpan.FromSeconds(totalTimeInSeconds);
+            int days = totalTime.Days;
+            int hours = totalTime.Hours;
+            int minutes = totalTime.Minutes;
+            int seconds = totalTime.Seconds;
+            int ms = totalTime.Milliseconds;
+            Status.TimeEstimated = $"{days}d, {hours}h, {minutes}m, {seconds}s, {ms}ms";
+        }
+    }
 }
 
+public class BruteForceStatus
+{
+    public string TimeSpent = string.Empty;
+    public string FoundPassword = string.Empty;
+    public string Message = string.Empty;
+    public string TimeEstimated = string.Empty;
+    public double TotalCombinations = 0;
+    public long Speed = 0;
+}
