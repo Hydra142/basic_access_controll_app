@@ -20,6 +20,7 @@ namespace SafeMessenge.Views;
 public sealed partial class LoginPage : Page
 {
     private CancellationTokenSource _cancellationToken;
+    private BruteForceSettings _bruteForceSettings = new BruteForceSettings();
     public LoginPageViewModel ViewModel { get; set; }
     public bool IsShowUSerSelection = false;
     public LoginPage()
@@ -58,6 +59,24 @@ public sealed partial class LoginPage : Page
         }
     }
 
+    private async void Login(string password)
+    {
+        if (ViewModel.CyrrentUser != null && !ViewModel.CyrrentUser.Password.IsNullOrEmpty())
+        {
+            // перевірка на правильність паролю
+            var isPasswordMaches = ViewModel.CyrrentUser.Password == password;
+            if (isPasswordMaches)
+            {
+                NavigateToNextPage();
+            }
+            else
+            {
+                //PasswordInput.BorderBrush = new SolidColorBrush(Colors.Red);
+                //MessageBlock.Text = "Невіриний пароль!";
+            }
+        }
+    }
+
 
     private void NavigateToNextPage()
     {
@@ -73,6 +92,7 @@ public sealed partial class LoginPage : Page
 
     private async void StartBruteForce_Click(object sender, RoutedEventArgs e)
     {
+        _bruteForceSettings.Password = ViewModel.CyrrentUser.Password;
         StartBruteForceBtn.Visibility = Visibility.Collapsed;
         BruteForceSettingsBtn.Visibility = Visibility.Collapsed;
         StopBruteForceBtn.Visibility = Visibility.Visible;
@@ -87,7 +107,7 @@ public sealed partial class LoginPage : Page
         _cancellationToken = new CancellationTokenSource();
         try
         {
-            var cracker = new BruteForcePasswordCracker();
+            var cracker = new BruteForcePasswordCracker(_bruteForceSettings);
             DispatcherTimer timer = new DispatcherTimer();
             timer.Interval = TimeSpan.FromMilliseconds(500);
             timer.Tick += (s, args) =>
@@ -107,7 +127,7 @@ public sealed partial class LoginPage : Page
 
     private void DisplayBruteForceResult(BruteForceStatus result)
     {
-        PasswordInput.Text = result.FoundPassword;
+        ViewModel.Password = result.FoundPassword;
         StartBruteForceBtn.Visibility = Visibility.Visible;
         BruteForceSettingsBtn.Visibility = Visibility.Visible;
         StopBruteForceBtn.Visibility = Visibility.Collapsed;
@@ -134,8 +154,13 @@ public sealed partial class LoginPage : Page
     {
         _cancellationToken.Cancel();
         StartBruteForceBtn.Visibility = Visibility.Visible;
+        BruteForceSettingsBtn.Visibility = Visibility.Visible;
         StopBruteForceBtn.Visibility = Visibility.Collapsed;
-        BruteForceSettingsBtn.Visibility = Visibility.Collapsed;
         LoadingIcon.Visibility = Visibility.Collapsed;
+    }
+
+    private async void BruteForceSettingsBtn_Click(object sender, RoutedEventArgs e)
+    {
+        _bruteForceSettings = await SettingsDialog.ShowAsync(_bruteForceSettings);
     }
 }

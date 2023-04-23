@@ -10,47 +10,47 @@ namespace SafeMessenge.Helpers;
 public class BruteForcePasswordCracker
 {
     // the secret password which we will try to find via brute force
-    private string _password = "qwerty";
+    private string _password;
     private string _result;
 
     private bool _isMatched = false;
     private int _charactersToTestLength = 0;
     private long _computedKeys = 0;
     private long _previousComputedKeys = 0;
-    private int _length_variation = 0;
-    private int _estimatedPasswordLength = 6;
+    private int _minPasswordLength = 1;
+    private int _maxPasswordLength = 1;
+    private static char[] _characters = {};
     private Timer _update_timer;
     private bool _isStatusDisplayed = false;
     public BruteForceStatus Status { get; set; } = new();
 
-
+    public BruteForcePasswordCracker(BruteForceSettings settings)
+    {
+        _password = settings.Password;
+        settings.Length = settings.Length == 0 ? 15 : settings.Length;
+        _maxPasswordLength = settings.IsLengthApproximate ? settings.Length + 1 : settings.Length;
+        _minPasswordLength = settings.IsLengthApproximate && settings.Length > 0 ? settings.Length - 1 : 1;
+        _charactersToTestLength = settings.Characters.Length;
+        _characters = settings.Characters.ToCharArray();
+    }
 
     /* An array containing the characters which will be used to create the brute force keys,
      * if less characters are used (e.g. only lower case chars) the faster the password is matched  */
-    private static char[] charactersToTest =
-    {
-        'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j',
-        'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't',
-        'u', 'v', 'w', 'x', 'y', 'z'/*,'A','B','C','D','E',
-        'F','G','H','I','J','K','L','M','N','O','P','Q','R',
-        'S','T','U','V','W','X','Y','Z','1','2','3','4','5',
-        '6','7','8','9','0','!','$','#','@','-'*/
-    };
 
     public async Task<BruteForceStatus> Start(CancellationToken cancellationToken/*, Action<BruteForcePasswordCrackerResult> onOperationCompleted*/)
     {
         var timeStarted = DateTime.Now;
         // The length of the array is stored permanently during runtime
-        _charactersToTestLength = charactersToTest.Length;
-        Status.TotalCombinations = Math.Pow(_charactersToTestLength, _estimatedPasswordLength + _length_variation);
+        _charactersToTestLength = _characters.Length;
+        Status.TotalCombinations = Math.Pow(_charactersToTestLength, _maxPasswordLength);
         
         // The length of the password is unknown, so we have to run trough the full search space
 
         _update_timer = new Timer(UpdateStatus, null, 1000, Timeout.Infinite);
         try
         {
-            var passLength = _estimatedPasswordLength != 0 ? _estimatedPasswordLength - _length_variation : _estimatedPasswordLength;
-            while (!_isMatched && passLength <= _estimatedPasswordLength + _length_variation)
+            var passLength = _minPasswordLength;
+            while (!_isMatched && passLength <= _maxPasswordLength)
             {
                 /* The estimated length of the password will be increased and every possible key for this
                  * key length will be created and compared against the password */
@@ -75,7 +75,7 @@ public class BruteForcePasswordCracker
     /// <param name="keyLength">The length of the key</param>
     private void startBruteForce(int keyLength, CancellationToken cancellationToken)
     {
-        var keyChars = createCharArray(keyLength, charactersToTest[0]);
+        var keyChars = createCharArray(keyLength, _characters[0]);
         // The index of the last character will be stored for slight perfomance improvement
         var indexOfLastChar = keyLength - 1;
         createNewKey(0, keyChars, keyLength, indexOfLastChar, cancellationToken);
@@ -112,7 +112,7 @@ public class BruteForcePasswordCracker
             }
             /* The character at the currentCharPosition will be replaced by a
              * new character from the charactersToTest array => a new key combination will be created */
-            keyChars[currentCharPosition] = charactersToTest[i];
+            keyChars[currentCharPosition] = _characters[i];
 
             // метод буде викликати сам себе доки не перебере всі можливі комбінації або не знайде пароль
             if (currentCharPosition < indexOfLastChar && !_isMatched)
@@ -167,13 +167,24 @@ public class BruteForcePasswordCracker
         if (Status.Speed != 0)
         {
             double totalTimeInSeconds = (Status.TotalCombinations /*- Interlocked.Read(ref _computedKeys)*/) / (Status.Speed * (1 + (10 / 100)));
-            TimeSpan totalTime = TimeSpan.FromSeconds(totalTimeInSeconds);
+            TimeSpan totalTime = new();
+            var prefix = string.Empty;
+            try
+            {
+                totalTime = TimeSpan.FromDays(((totalTimeInSeconds / 60) / 60) / 24);
+
+            }
+            catch (Exception)
+            {
+                prefix = "більше ";
+                totalTime = TimeSpan.MaxValue;
+            }            
             int days = totalTime.Days;
             int hours = totalTime.Hours;
             int minutes = totalTime.Minutes;
             int seconds = totalTime.Seconds;
             int ms = totalTime.Milliseconds;
-            Status.TimeEstimated = $"{days}d, {hours}h, {minutes}m, {seconds}s, {ms}ms";
+            Status.TimeEstimated = $"{prefix} {days}д, {hours}г, {minutes}хв, {seconds}с, {ms}мс";
         }
     }
 }
@@ -186,4 +197,13 @@ public class BruteForceStatus
     public string TimeEstimated = string.Empty;
     public double TotalCombinations = 0;
     public long Speed = 0;
+}
+
+public class BruteForceSettings
+{
+    public string Password = string.Empty;
+    public string Characters = "abcdefghijklmnopqrstuvwxyz";
+    public bool IsLengthKnown = false;
+    public bool IsLengthApproximate = false;
+    public int Length = 1;
 }

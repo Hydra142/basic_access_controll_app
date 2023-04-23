@@ -1,0 +1,57 @@
+﻿<UserControl
+    x:Class="SafeMessenge.UserControls.BruteForceSettingsDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:SafeMessenge.UserControls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid>
+        <ContentDialog x:Name="Dialog" CornerRadius="10">
+            <Grid RowSpacing="10" Width="440">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <TextBlock Text="Налаштування" HorizontalAlignment="Center"/>
+                <Grid Grid.Row="1" VerticalAlignment="Center" >
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Text="Довжина"/>
+                    <StackPanel Grid.Row="1" Orientation="Horizontal">
+                        <CheckBox Name="IsLengthKnownCheckBox" IsChecked="{x:Bind BruteForceSettings.IsLengthKnown, Mode=TwoWay}" Click="IsLengthKnownCheckBox_Click" Content="Відомо довжину" Margin="0 0 5 0"/>
+                        <NumberBox Name="LengthInput" Minimum="1" Value="{x:Bind BruteForceSettings.Length, Mode=TwoWay}" VerticalAlignment="Stretch" ValueChanged="LengthInput_ValueChanged" Margin="0 0 5 0" Visibility="Collapsed"/>
+                        <CheckBox Name="IsLengthApproximateCheckBox" IsChecked="{x:Bind BruteForceSettings.IsLengthApproximate, Mode=TwoWay}" Click="IsLengthApproximateCheckBox_Click" Content="Довжина містить похибку(+-1)"  Margin="0 0 5 0" Visibility="Collapsed"/>
+                    </StackPanel>
+                    <TextBlock Grid.Row="2" Text="Символи" Margin="0 20 0 0"/>
+                    <Grid Grid.Row="3">
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <CheckBox Grid.Row="0" Grid.Column="0" x:Name="LowerLatinCheckBox" Content="латиниця" Checked="CheckBoxChanged" Unchecked="CheckBoxChanged" />
+                        <CheckBox Grid.Row="1" Grid.Column="1" x:Name="UpperCyrillicCheckBox" Content="КИРИЛИЦЯ" Checked="CheckBoxChanged" Unchecked="CheckBoxChanged" />
+                        <CheckBox Grid.Row="0" Grid.Column="1" x:Name="LowerCyrillicCheckBox" Content="кирилиця" Checked="CheckBoxChanged" Unchecked="CheckBoxChanged" />
+                        <CheckBox Grid.Row="1" Grid.Column="0" x:Name="UpperLatinCheckBox" Content="ЛАТИНИЦЯ" Checked="CheckBoxChanged" Unchecked="CheckBoxChanged" />
+                        <CheckBox Grid.Row="0" Grid.Column="2" x:Name="SpecialCheckBox" Content="спецсиволи" Checked="CheckBoxChanged" Unchecked="CheckBoxChanged" />
+                        <CheckBox Grid.Row="1" Grid.Column="2" x:Name="DigitsCheckBox" Content="цифри" Checked="CheckBoxChanged" Unchecked="CheckBoxChanged" />
+                    </Grid>
+                    <TextBox Grid.Row="4" x:Name="Characters" TextWrapping="Wrap" AcceptsReturn="True" TextChanged="Characters_TextChanged" Height="100"/>
+                </Grid>
+                <Button Grid.Row="2" Content="Ok" HorizontalAlignment="Center" Click="CloseButton_Click"/>
+            </Grid>
+        </ContentDialog>
+    </Grid>
+</UserControl>
