@@ -59,24 +59,6 @@ public sealed partial class LoginPage : Page
         }
     }
 
-    private async void Login(string password)
-    {
-        if (ViewModel.CyrrentUser != null && !ViewModel.CyrrentUser.Password.IsNullOrEmpty())
-        {
-            // перевірка на правильність паролю
-            var isPasswordMaches = ViewModel.CyrrentUser.Password == password;
-            if (isPasswordMaches)
-            {
-                NavigateToNextPage();
-            }
-            else
-            {
-                //PasswordInput.BorderBrush = new SolidColorBrush(Colors.Red);
-                //MessageBlock.Text = "Невіриний пароль!";
-            }
-        }
-    }
-
 
     private void NavigateToNextPage()
     {
@@ -99,25 +81,36 @@ public sealed partial class LoginPage : Page
         LoadingIcon.Visibility = Visibility.Visible;
 
 
-        StartBruteForce(DisplayBruteForceResult);
+        StartBruteForce();
     }
 
-    public async Task StartBruteForce(Action<BruteForceStatus> onOperationCompleted)
+    public async Task StartBruteForce()
     {
         _cancellationToken = new CancellationTokenSource();
         try
         {
+            // створення екземпляру класу для підбору передавши налаштування
             var cracker = new BruteForcePasswordCracker(_bruteForceSettings);
             DispatcherTimer timer = new DispatcherTimer();
-            timer.Interval = TimeSpan.FromMilliseconds(500);
+            //запуск таймера який виведе статус підбору
+            timer.Interval = TimeSpan.FromMilliseconds(1200);
             timer.Tick += (s, args) =>
             {
-                MessageBlock.Text = $"Максимальний час: {cracker.Status.TimeEstimated};\nШвидкість: {cracker.Status.Speed} комбінацій/сек;\nК-ть комбінацій: {cracker.Status.TotalCombinations};";
+                if (cracker != null && cracker.Status.FoundPassword.IsNullOrEmpty())
+                {
+                    MessageBlock.Text =
+                    $"Максимальний час: {cracker?.Status?.TimeEstimated};\n" +
+                    $"Швидкість: {cracker?.Status?.Speed.ToString("N0")} комбінацій/сек;\n" +
+                    $"К-ть комбінацій: {cracker?.Status?.TotalCombinations.ToString("N0")};" +
+                    $"{_bruteForceSettings.ToString()}";
+                }
+                timer.Stop();
             };
             timer.Start();
+            //запуск підбору в окремому потоці
             var result = await Task.Run(() => cracker.Start(_cancellationToken.Token));
-            timer.Stop();
-            onOperationCompleted(result);
+            // відображення результату
+            DisplayBruteForceResult(result);
             cracker = null;
         }
         catch (OperationCanceledException)
@@ -133,10 +126,14 @@ public sealed partial class LoginPage : Page
         StopBruteForceBtn.Visibility = Visibility.Collapsed;
         LoadingIcon.Visibility = Visibility.Collapsed;
 
-        MessageBlock.Text = $"Статус: {result.Message}; Час виконання: {result.TimeSpent}; Загаьна к-ть комбінацій: {result.TotalCombinations}";
+        MessageBlock.Text = 
+            $"Статус: {result.Message}; " +
+            $"Час виконання: {result.TimeSpent}{(result.TimeEstimated.IsNullOrEmpty()? "": $"/{result.TimeEstimated}")}; " +
+            $"Загаьна к-ть комбінацій: {result.TotalCombinations.ToString("N0")}" +
+            $"{_bruteForceSettings.ToString()}";
 
-        var currBackground = PasswordInput.Background;
-        var currForeground = PasswordInput.Foreground;
+        var currBackground = new SolidColorBrush(Windows.UI.Color.FromArgb(15, 255, 255, 255));
+        var currForeground = new SolidColorBrush(Colors.White);
         PasswordInput.Background = new SolidColorBrush(result.Message == "Успіх" ? Colors.YellowGreen : Colors.Red);
         PasswordInput.Foreground = new SolidColorBrush(Colors.Red);
         DispatcherTimer timer = new DispatcherTimer();

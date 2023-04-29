@@ -48,7 +48,7 @@
                         <CheckBox Grid.Row="0" Grid.Column="2" x:Name="SpecialCheckBox" Content="спецсиволи" Checked="CheckBoxChanged" Unchecked="CheckBoxChanged" />
                         <CheckBox Grid.Row="1" Grid.Column="2" x:Name="DigitsCheckBox" Content="цифри" Checked="CheckBoxChanged" Unchecked="CheckBoxChanged" />
                     </Grid>
-                    <TextBox Grid.Row="4" x:Name="Characters" TextWrapping="Wrap" AcceptsReturn="True" TextChanged="Characters_TextChanged" Height="100"/>
+                    <TextBox Grid.Row="4" IsSpellCheckEnabled="False" x:Name="Characters" TextWrapping="Wrap" AcceptsReturn="True" TextChanged="Characters_TextChanged" Height="100"/>
                 </Grid>
                 <Button Grid.Row="2" Content="Ok" HorizontalAlignment="Center" Click="CloseButton_Click"/>
             </Grid>

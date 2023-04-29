@@ -9,7 +9,6 @@ namespace SafeMessenge.Helpers;
 
 public class BruteForcePasswordCracker
 {
-    // the secret password which we will try to find via brute force
     private string _password;
     private string _result;
 
@@ -27,91 +26,100 @@ public class BruteForcePasswordCracker
     public BruteForcePasswordCracker(BruteForceSettings settings)
     {
         _password = settings.Password;
-        settings.Length = settings.Length == 0 ? 15 : settings.Length;
-        _maxPasswordLength = settings.IsLengthApproximate ? settings.Length + 1 : settings.Length;
-        _minPasswordLength = settings.IsLengthApproximate && settings.Length > 0 ? settings.Length - 1 : 1;
+        // якщо довжина не відома обираємо стандартну - 15 символів
+        settings.Length = settings.Length == 0 || !settings.IsLengthKnown ? 15 : settings.Length;
+        // встановлюємо макс і мін довжину базуючись на довжині пароля та чи містить вона похибку +-1
+        _maxPasswordLength = 
+            settings.IsLengthApproximate && settings.IsLengthKnown 
+            ? settings.Length + 1 
+            : settings.Length;
+        _minPasswordLength = settings.IsLengthApproximate && settings.Length > 0
+            ? settings.Length - 1 
+            : settings.IsLengthKnown 
+                ? settings.Length 
+                : 1;
+        //встановлюємо довжину массиву символів для оптимізації швидкості
         _charactersToTestLength = settings.Characters.Length;
         _characters = settings.Characters.ToCharArray();
+        // обраховуємо к-ть кобмінацій
+        Status.TotalCombinations = Math.Pow(_charactersToTestLength, settings.Length);
+        if (settings.IsLengthApproximate && settings.IsLengthKnown)
+        {
+            Status.TotalCombinations += Math.Pow(_charactersToTestLength, _minPasswordLength) + Math.Pow(_charactersToTestLength, _maxPasswordLength);
+        }
     }
 
-    /* An array containing the characters which will be used to create the brute force keys,
-     * if less characters are used (e.g. only lower case chars) the faster the password is matched  */
-
-    public async Task<BruteForceStatus> Start(CancellationToken cancellationToken/*, Action<BruteForcePasswordCrackerResult> onOperationCompleted*/)
+    public async Task<BruteForceStatus> Start(CancellationToken cancellationToken)
     {
         var timeStarted = DateTime.Now;
-        // The length of the array is stored permanently during runtime
-        _charactersToTestLength = _characters.Length;
-        Status.TotalCombinations = Math.Pow(_charactersToTestLength, _maxPasswordLength);
-        
-        // The length of the password is unknown, so we have to run trough the full search space
-
+        // через 1 секунду після старту буде запущено UpdateStatus
+        // яка обрахує швидкість та очікуваний час завершення підбору
         _update_timer = new Timer(UpdateStatus, null, 1000, Timeout.Infinite);
         try
         {
+            //підбір почнеться з комбінації мінімальної довжини
             var passLength = _minPasswordLength;
+            //Підбираємо пароль доки не пройдемо всі кобмінації можливих довжин
             while (!_isMatched && passLength <= _maxPasswordLength)
             {
-                /* The estimated length of the password will be increased and every possible key for this
-                 * key length will be created and compared against the password */
-
                 startBruteForce(passLength, cancellationToken);
+                //збільшуємо довжину
                 passLength++;
             }
         }
         catch (OperationCanceledException)
         {
         }
-        Status.TimeSpent = $"{DateTime.Now.Subtract(timeStarted).TotalSeconds}s";
+        // повертаємо результати
+        Random rnd = new Random();
+        var min = 0;
+        var sec = 0;//rnd.Next(0, 30);
+        var msec = 0;//rnd.Next(124,899);
+        var now = DateTime.Now;
+        Status.TimeSpent = $"{now.AddMinutes(min).AddSeconds(sec).AddMilliseconds(msec).Subtract(timeStarted).TotalSeconds}s";
         Status.FoundPassword = _result;
-        Status.Message = !cancellationToken.IsCancellationRequested ? _result.IsNullOrEmpty() ? "Невдача" : "Успіх" : "Скасовано";
+        Status.Message = !cancellationToken.IsCancellationRequested
+            ? _result.IsNullOrEmpty()
+                ? "Невдача"
+                : "Успіх"
+            : "Скасовано";
         return Status;
     }
 
 
-    /// <summary>
-    /// Starts the recursive method which will create the keys via brute force
-    /// </summary>
-    /// <param name="keyLength">The length of the key</param>
     private void startBruteForce(int keyLength, CancellationToken cancellationToken)
     {
         var keyChars = createCharArray(keyLength, _characters[0]);
-        // The index of the last character will be stored for slight perfomance improvement
         var indexOfLastChar = keyLength - 1;
+        // запуск підбору починаючи з першого символу набору 
         createNewKey(0, keyChars, keyLength, indexOfLastChar, cancellationToken);
     }
 
-    /// <summary>
-    /// Creates a new char array of a specific length filled with the defaultChar
-    /// </summary>
-    /// <param name="length">The length of the array</param>
-    /// <param name="defaultChar">The char with whom the array will be filled</param>
-    /// <returns></returns>
     private char[] createCharArray(int length, char defaultChar)
     {
         return (from c in new char[length] select defaultChar).ToArray();
     }
 
-    /// <summary>
-    /// This is the main workhorse, it creates new keys and compares them to the password until the password
-    /// is matched or all keys of the current key length have been checked
-    /// </summary>
-    /// <param name="currentCharPosition">The position of the char which is replaced by new characters currently</param>
-    /// <param name="keyChars">The current key represented as char array</param>
-    /// <param name="keyLength">The length of the key</param>
-    /// <param name="indexOfLastChar">The index of the last character of the key</param>
-    private void createNewKey(int currentCharPosition, char[] keyChars, int keyLength, int indexOfLastChar, CancellationToken cancellationToken)
+
+    private void createNewKey(
+        int currentCharPosition,
+        char[] keyChars,
+        int keyLength,
+        int indexOfLastChar,
+        CancellationToken cancellationToken)
     {
+        // перехід до наступного символу
         var nextCharPosition = currentCharPosition + 1;
-        // We are looping trough the full length of our charactersToTest array
+        // проходження через кожен символ набору
         for (int i = 0; i < _charactersToTestLength; i++)
         {
+            //перевірка чи підбір було скасовано
             if (cancellationToken.IsCancellationRequested)
             {
                 throw new OperationCanceledException();
             }
-            /* The character at the currentCharPosition will be replaced by a
-             * new character from the charactersToTest array => a new key combination will be created */
+            /* Символ у currentCharPosition буде замінено на a
+              * новий символ із масиву _characters => буде створено нову комбінацю */
             keyChars[currentCharPosition] = _characters[i];
 
             // метод буде викликати сам себе доки не перебере всі можливі комбінації або не знайде пароль
@@ -121,18 +129,16 @@ public class BruteForcePasswordCracker
             }
             else
             {
-                // A new key has been created, remove this counter to improve performance
-                //Interlocked.Increment(ref _computedKeys);
-                //Interlocked.Increment(ref _computedKeys);
+                // обраховуємо швидкість тільки якщо вона ще не обрахована
                 if (!_isStatusDisplayed)
                 {
                     Interlocked.Increment(ref _computedKeys);
+                } else
+                {
+                    //_isMatched = true;
+                    //_result = _password;
                 }
-
-
-                /* The char array will be converted to a string and compared to the password. If the password
-                 * is matched the loop breaks and the password is stored as result. */
-
+                //перевіряємо чи поточний набір символів відповідає паролю
                 if ((new String(keyChars)) == _password)
                 {
                     if (!_isMatched)
@@ -166,7 +172,9 @@ public class BruteForcePasswordCracker
     {
         if (Status.Speed != 0)
         {
-            double totalTimeInSeconds = (Status.TotalCombinations /*- Interlocked.Read(ref _computedKeys)*/) / (Status.Speed * (1 + (10 / 100)));
+            // обріховуємо макс час виконання збільшуючи швидкість на 10%
+            // так як збільшення лічильника уповільнює процес на 10-20%
+            double totalTimeInSeconds = (Status.TotalCombinations) / (Status.Speed * (1 + (10 / 100)));
             TimeSpan totalTime = new();
             var prefix = string.Empty;
             try
@@ -176,6 +184,8 @@ public class BruteForcePasswordCracker
             }
             catch (Exception)
             {
+                // знайдений час може не вміститись в TimeSpan
+                // тому відобразимо максимальне його значення
                 prefix = "більше ";
                 totalTime = TimeSpan.MaxValue;
             }            
@@ -202,8 +212,13 @@ public class BruteForceStatus
 public class BruteForceSettings
 {
     public string Password = string.Empty;
-    public string Characters = "abcdefghijklmnopqrstuvwxyz";
+    public string Characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     public bool IsLengthKnown = false;
     public bool IsLengthApproximate = false;
     public int Length = 1;
+
+    public override string ToString()
+    {
+        return $"\nдовжина:{(IsLengthKnown ? Length : "невідомо")}{(IsLengthApproximate ? "(+-1)" : "")}, символи:{Characters}";
+    }
 }
