@@ -45,6 +45,8 @@ CREATE TABLE IF NOT EXISTS [Users] (
 , [IsAdmin] BOOLEAN NOT NULL default 0
 , [PasswordTypeId] INTEGER NOT NULL
 , [Created] DATETIME default current_timestamp
+, [PasssworExpirationDate] DATETIME default NULL
+, [PasswordActiveDays] INTEGER NOT NULL default 30
 , ClearanceId INTEGER NOT NULL default 1
 , ActionTypeId INTEGER NOT NULL default 1
 , AccessControlModelId INTEGER NOT NULL default 0
@@ -53,12 +55,21 @@ CREATE TABLE IF NOT EXISTS [Users] (
 , FOREIGN KEY (ClearanceId) REFERENCES SecurityClearances (Id)
 );
 INSERT INTO Users ([Id],[UserName], [Password], [PasswordTypeId], [IsAdmin], [ActionTypeId]) VALUES
-(1, 'Admin', 'q', 1, 1, 2),
-(2, 'Редчич 1', 'q', 1, 0, 2),
-(3, 'Редчич 2', 'q', 1, 0, 2),
-(4, 'Редчич 3', 'q', 1, 0, 2),
-(5, 'Редчич 4', 'q', 1, 0, 2),
-(6, 'Редчич 5', 'q', 1, 0, 2);
+(1, 'Admin', '', 1, 1, 2),
+(2, 'Редчич 1', '', 1, 0, 2),
+(3, 'Редчич 2', '', 1, 0, 2),
+(4, 'Редчич 3', '', 1, 0, 2),
+(5, 'Редчич 4', '', 1, 0, 2),
+(6, 'Редчич 5', '', 1, 0, 2);
+
+DROP TABLE IF EXISTS [PasswordHistory];
+CREATE TABLE PasswordHistory (
+  Id INTEGER PRIMARY KEY AUTOINCREMENT,
+  UserId INTEGER NOT NULL,
+  Password INTEGER NOT NULL,
+  FOREIGN KEY (UserId) REFERENCES Users (Id)
+);
+
 /*РОЛЬОВА СТАРТ*/
 DROP TABLE IF EXISTS [Roles];
 CREATE TABLE Roles (
@@ -120,3 +131,26 @@ values  (1, 'Txt 1', 'D:\LabsData\TBD\TBD_Redchych\Data\TextFile1.txt', 0, 1),
         (3, 'Txt 3', 'D:\LabsData\TBD\TBD_Redchych\Data\TextFile3.txt', 0, 1),
         (4, 'Exe 1', 'D:\LabsData\TBD\TBD_Redchych\Data\secret_executable_file.exe', 2, 1),
         (6, 'Img 1', 'D:\LabsData\TBD\TBD_Redchych\Data\ImgFile.png', 1, 1);
+
+CREATE TRIGGER insert_password_history
+AFTER UPDATE ON Users
+FOR EACH ROW
+/*тільки якщо пароль змінився*/
+WHEN NEW.password <> OLD.password
+BEGIN
+  /*створюємо новий запис історії*/
+  INSERT INTO PasswordHistory (UserId, password)
+  VALUES (NEW.id, NEW.password);
+END;
+
+CREATE TRIGGER update_password_expiration
+BEFORE UPDATE ON Users
+FOR EACH ROW
+/*тільки якщо пароль змінився*/
+WHEN NEW.password <> OLD.password
+BEGIN
+  UPDATE Users
+  /*обчислюємо нову дату закінчення дії*/
+  SET PasssworExpirationDate = datetime('now', '+' || NEW.PasswordActiveDays || ' days')
+  WHERE Id = NEW.id;
+END;

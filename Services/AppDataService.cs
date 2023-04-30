@@ -45,10 +45,26 @@ public class AppDataService
         result.AddRange(await _sqliteConnector.Read<User>(Resources.GetAllUsers, new { }));
         return result;
     }
+    public async Task<List<string>> GetLastUserPasswords(long userId)
+    {
+        var result = new List<string>();
+        result.AddRange(await _sqliteConnector.Read<string>(Resources.GetLastUserPasswords, new { UserId = userId }));
+        return result;
+    }
     public async Task<User?> UpdateUserData(User user)
     {
         //запит на зміну данних корстувача
         var res = await _sqliteConnector.Write(Resources.UpdateUser, user.ToObject());
+        var userData = await _sqliteConnector.Read<User>(Resources.GetUserById, user.ToObject());
+        if (userData != null && userData.Count > 0)
+        {
+            return userData.First();
+        }
+        return null;
+
+    }
+    public async Task<User?> GetUserData(User user)
+    {
         var userData = await _sqliteConnector.Read<User>(Resources.GetUserById, user.ToObject());
         if (userData != null && userData.Count > 0)
         {

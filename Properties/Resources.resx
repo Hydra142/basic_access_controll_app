@@ -145,6 +145,9 @@
   <data name="GetDiscretionaryAccessModelUserAvailableFilesById" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Sqlite\DiscretionaryAccessMatrix\GetDiscretionaryAccessModelUserAvailableFilesById.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
+  <data name="GetLastUserPasswords" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Sqlite\User\GetLastUserPasswords.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
   <data name="GetPasswordTypes" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Sqlite\PasswordType\GetPasswordTypes.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>

@@ -69,7 +69,7 @@ public class LoginPageViewModel : ObservableRecipient
 
     public async Task UpdateUserPassword(User user)
     {
-        var result = await AppDataService.UpdateUserPassword(user);
+        var result = await AppDataService.UpdateUserData(user);
         if (result != null)
         {
             AppDataService.Users[AppDataService.Users.IndexOf(user)] = result;

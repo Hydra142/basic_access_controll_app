@@ -307,6 +307,7 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
@@ -362,7 +363,20 @@
                         ItemsSource="{x:Bind ViewModel.ActionTypeOptions, Mode=OneWay}"
                         SelectedItem="{x:Bind ViewModel.SelectedActionTypeOption, Mode=TwoWay}"
                         Visibility="{x:Bind ViewModel.SelectedUser.AccessControlModelId, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=MandatoryAccessControl, Mode=OneWay}"/>
-                    <Button Grid.Row="6" Grid.Column="1" Content="Зберегти" HorizontalAlignment="Right" VerticalAlignment="Bottom" Background="red" Click="{x:Bind ViewModel.SaveUserData}"/>
+                    <TextBlock
+                        Grid.Row="6"
+                        Grid.Column="0"
+                        Text="Термін дії паролю(дні):"
+                        VerticalAlignment="Center"
+                        FontSize="18"
+                        FontWeight="Normal"
+                        Foreground="Black"/>
+                    <NumberBox
+                        Minimum="1"
+                        Grid.Row="6"
+                        Grid.Column="1"
+                        Value="{x:Bind ViewModel.SelectedUser.PasswordActiveDays, Mode=TwoWay}"/>
+                    <Button Grid.Row="7" Grid.Column="1" Content="Зберегти" HorizontalAlignment="Right" VerticalAlignment="Bottom" Background="red" Click="{x:Bind ViewModel.SaveUserData}"/>
                 </Grid>
                 <Grid Grid.Row="0" Grid.Column="1" Padding="10" RowSpacing="10" BorderBrush="Black" BorderThickness="2 5 0 0" Background="#f57c00" Visibility="{x:Bind ViewModel.SelectedUser.AccessControlModelId, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter=DiscretionaryAccessControl, Mode=OneWay}">
                     <Grid.RowDefinitions>

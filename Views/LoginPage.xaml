@@ -97,7 +97,12 @@
             <TextBlock Grid.Row="0" Grid.Column="0" Text="Корстувач:" VerticalAlignment="Center" Margin="0 0 10 0"/>
             <TextBlock Grid.Row="0" Grid.Column="1" Text="{x:Bind ViewModel.CyrrentUser.Name, Mode=OneWay}"/>
             <TextBlock Grid.Row="1" Grid.Column="0" Text="Пароль:" VerticalAlignment="Center" Margin="0 0 10 0"/>
-            <TextBox Name="PasswordInput" Grid.Row="1" Grid.Column="1" Text="{x:Bind ViewModel.Password, Mode=TwoWay}"/>
+            <TextBox
+                Name="PasswordInput"
+                Paste="PasswordInput_Paste"
+                Grid.Row="1"
+                Grid.Column="1"
+                Text="{x:Bind ViewModel.Password, Mode=TwoWay}"/>
             <ProgressRing  Grid.Row="1" Grid.Column="2" Name="LoadingIcon" IsActive="True" Width="25" Height="25" Margin="5 0 0 0" Foreground="GreenYellow" Visibility="Collapsed"/>
             <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center">
                 <Button Grid.Row="2" Grid.Column="1" Name="StartBruteForceBtn" Content="Підібрати" FontSize="11" HorizontalAlignment="Center" Click="StartBruteForce_Click" IsEnabled="{x:Bind ViewModel.IsUserSelected, Mode=OneWay}"/>

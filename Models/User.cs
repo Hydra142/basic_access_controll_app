@@ -3,6 +3,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text.RegularExpressions;
 using CommunityToolkit.Mvvm.ComponentModel;
 using System.Collections.ObjectModel;
+using System;
 
 namespace SafeMessenge.Models;
 
@@ -18,6 +19,8 @@ public partial class User
     public string PasswordTypeName;
     public string PasswordValidationRegex;
     public string PasswordTypeDescription;
+    public DateTime? PasssworExpirationDate;
+    public int PasswordActiveDays;
     [ObservableProperty]
     public AccessControlModel _AccessControlModelId;
     //mandatoty access model fields start
@@ -28,6 +31,6 @@ public partial class User
 
     public object ToObject()
     {
-        return new { Id = Id, UserName = _Name, Password = Password, IsAdmin = IsAdmin, PasswordTypeId = PasswordTypeId, ClearanceId = ClearanceId, ActionTypeId = ActionTypeId, AccessControlModelId = (int)AccessControlModelId };
+        return new { Id = Id, UserName = _Name, Password = Password, IsAdmin = IsAdmin, PasswordTypeId = PasswordTypeId, ClearanceId = ClearanceId, ActionTypeId = ActionTypeId, AccessControlModelId = (int)AccessControlModelId, PasswordActiveDays = PasswordActiveDays };
     }
 }

@@ -5,5 +5,6 @@
 [PasswordTypeId] = @PasswordTypeId,
 [ClearanceId] = @ClearanceId,
 [ActionTypeId] = @ActionTypeId,
-[AccessControlModelId] = @AccessControlModelId
+[AccessControlModelId] = @AccessControlModelId,
+[PasswordActiveDays] = @PasswordActiveDays
 WHERE [Id] = @Id;

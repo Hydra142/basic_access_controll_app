@@ -6,6 +6,8 @@
     Users.ClearanceId AS [ClearanceId],
     Users.ActionTypeId AS [ActionTypeId],
     Users.AccessControlModelId AS [AccessControlModelId],
+    Users.PasssworExpirationDate AS [PasssworExpirationDate],
+    Users.PasswordActiveDays AS [PasswordActiveDays],
     PaswordTypes.Id AS [PasswordTypeId],
     PaswordTypes.Name AS [PasswordTypeName],
     PaswordTypes.ValidationRegex AS [PasswordValidationRegex],

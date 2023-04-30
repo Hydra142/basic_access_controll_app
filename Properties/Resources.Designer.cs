@@ -149,15 +149,13 @@ namespace SafeMessenge.Properties {
         ///    F.FilePath AS FilePath,
         ///    F.FileType AS FileType,
         ///    AT.Name AS ActionTypeName,
-        ///    AT.IsReadAble AS IsReadAble,
-        ///    AT.IsWriteAble AS IsWriteAble,
-        ///    AT.IsExecuteAble AS IsExecuteAble,
-        ///    RF.AllowFrom AS AllowFrom,
-        ///    RF.AllowTo AS AllowTo,
+        ///    MAX(AT.IsReadAble) AS IsReadAble,/*дозволене читання*/
+        ///    MAX(AT.IsWriteAble) AS IsWriteAble,/*дозволене редагування*/
+        ///    MAX(AT.IsExecuteAble) AS IsExecuteAble,/*дозволене виконання*/
+        ///    RF.AllowFrom AS AllowFrom,/*час початку доступності*/
+        ///    RF.AllowTo AS AllowTo,/*час закінчення доступності*/
         ///    CASE
-        ///        WHEN (substr(AllowFrom, 12, 8) = &apos;00:00:00&apos; AND substr(AllowTo, 12, 8) = &apos;00:00:00&apos;) THEN &apos;час не обмежений&apos;
-        ///        ELSE (substr(AllowFrom, 12, 5) || &apos; - &apos; || substr(AllowTo, 12, 5))
-        ///   [rest of string was truncated]&quot;;.
+        ///        WHEN (substr(AllowFrom, 12, 8) = &apos;00:00:00&apos; AND [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string GetAvailableUserFiles {
             get {
@@ -189,6 +187,19 @@ namespace SafeMessenge.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to SELECT Password
+        ///FROM PasswordHistory
+        ///WHERE UserId = @UserId
+        ///ORDER BY Id DESC
+        ///LIMIT 3.
+        /// </summary>
+        internal static string GetLastUserPasswords {
+            get {
+                return ResourceManager.GetString("GetLastUserPasswords", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to SELECT Id, Name, ValidationRegex, Description FROM PaswordTypes.
         /// </summary>
         internal static string GetPasswordTypes {
@@ -198,7 +209,8 @@ namespace SafeMessenge.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to SELECT
+        ///   Looks up a localized string similar to /*Достаємо матрицю роль - файл*/
+        ///SELECT
         ///	M.Id AS Id,
         ///	R.Id AS RoleId,
         ///	F.Id AS FileId,
@@ -212,7 +224,7 @@ namespace SafeMessenge.Properties {
         ///LEFT JOIN RoleFiles AS M ON M.RoleId = R.Id AND M.FileId = F.Id
         ///LEFT JOIN ActionTypes AS AT ON AT.Id = M.ActionTypeId
         ///WHERE R.Id = @RoleId
-        ///ORDER BY F.Name.
+        ///ORDER BY F.Id.
         /// </summary>
         internal static string GetRoleFiles {
             get {
@@ -270,7 +282,7 @@ namespace SafeMessenge.Properties {
         ///LEFT JOIN DiscretionaryAccessMatrix AS M ON M.UserId = U.Id AND M.FileId = F.Id
         ///LEFT JOIN ActionTypes AS AT ON AT.Id = M.ActionTypeId
         ///WHERE U.Id = @UserId
-        ///ORDER BY F.Name.
+        ///ORDER BY F.Id.
         /// </summary>
         internal static string GetUserDiscretionaryAccessMatrixById {
             get {
@@ -302,7 +314,8 @@ namespace SafeMessenge.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to SELECT
+        ///   Looks up a localized string similar to /*Достаємо матрицю користувач - роль*/
+        ///SELECT
         ///	UR.Id AS Id,
         ///	R.Id AS RoleId,
         ///	R.Name AS RoleName,
